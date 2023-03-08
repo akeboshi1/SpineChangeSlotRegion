@@ -1,0 +1,1 @@
+/Users/gxm/workspace/Unity/TestSpine/obj/Debug/spine-unity-examples.csproj.CoreCompileInputs.cache
