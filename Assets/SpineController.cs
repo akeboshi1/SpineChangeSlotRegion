@@ -18,26 +18,42 @@ public class SpineController : MonoBehaviour
 
     private Skin skin;
 
+    private MeshRenderer _meshRenderer;
+    
+    private Skeleton _skeleton;
+
+    private bool initBoo = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        skeletonAnimation = gameObject.GetComponent<SkeletonAnimation>();
+        skeletonAnimation = GetComponent<SkeletonAnimation>();
+
+        _meshRenderer = GetComponent<MeshRenderer>();
         
         // Get the Spine skin
         skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
         
-        // Apply the Spine skin
-        skeletonAnimation.Skeleton.Skin = skin;
+        // Get the Spine skeleton
+        _skeleton = skeletonAnimation.skeleton;
         
+        // Apply the Spine skin
+        skeletonAnimation.skeleton.Skin = skin;
+
         list = new List<string>();
         string[] stringsToAdd = { "Axe", "Dust", "Idle Backward", "Idle Forward", "Jump Backward","Jump Forward","Laydown","Pickup", "Run Backward","Run Forward","Sit","Walk Backward","Walk Forward" };
         list.AddRange(stringsToAdd);
+        initBoo = true;
         Debug.Log("====>",skeletonAnimation);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (initBoo == false)
+        {
+            return;
+        }
         if (count<=300)
         {
             count++;
@@ -56,7 +72,7 @@ public class SpineController : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, name, true); 
     }
 
-    void changeSlot(string slotName)
+    void changeSlot(string slotName,Attachment newAttachment)
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
@@ -64,14 +80,10 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        // Get a new sprite attachment
-        // 组织new Attachment
-        // var newAttachment = 
-        
         // Replace the attachment in the skin
-        // skin.SetAttachment(slot.Data.Index, attachment.Name, newAttachment);
+        skin.SetAttachment(slot.Data.Index, attachment.Name, newAttachment);
         
         // Set the attachment on the slot
-        // slot.Attachment = newAttachment;
+        slot.Attachment = newAttachment;
     }
 }
