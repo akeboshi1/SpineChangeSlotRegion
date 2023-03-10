@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Spine;
 using Spine.Unity;
+using Spine.Unity.AttachmentTools;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SpineController : MonoBehaviour
 {
+    public Texture2D _texture;
     private SkeletonAnimation skeletonAnimation;
 
     private List<string> list;
@@ -19,10 +21,16 @@ public class SpineController : MonoBehaviour
     private Skin skin;
 
     private MeshRenderer _meshRenderer;
-    
+
     private Skeleton _skeleton;
 
     private bool initBoo = false;
+
+    private bool updateRegion = false;
+
+    private bool changeSlot = false;
+
+    private List<string> slotList;
 
     // Start is called before the first frame update
     void Start()
@@ -30,60 +38,193 @@ public class SpineController : MonoBehaviour
         skeletonAnimation = GetComponent<SkeletonAnimation>();
 
         _meshRenderer = GetComponent<MeshRenderer>();
-        
+
         // Get the Spine skin
         skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
-        
+
         // Get the Spine skeleton
         _skeleton = skeletonAnimation.skeleton;
-        
+
         // Apply the Spine skin
         skeletonAnimation.skeleton.Skin = skin;
 
+
+        slotList = new List<string>();
+        string[] slotsToAdd =
+        {
+            "head_hair_back_0005_3",
+            "body_wing_0001_3",
+            "barm_base_0001_3",
+            "Weapons",
+            "bleg_base_0001_3",
+            "body_base_0001_3",
+            "fleg_cost_0005_3",
+            "fleg_base_0001_3",
+            "bleg_cost_0005_3",
+            "body_cost_dres_0005_3",
+            "body_cost_0005_3",
+            "head_base_0001_3",
+            "head_eyes_0001_3",
+            "head_hair_0005_3",
+            "head_hats_0001_3",
+            "head_mous_0004_3",
+            "Basket",
+            "head_face_0001_3",
+            "farm_base_0001_3",
+            "head_face_0001_1",
+            "head_base_0001_", "head_hair_0005_1", "barm_base_0001_1", "bleg_base_0001_1", "head_hats_0001_1",
+            "body_base_0001_1", "bleg_cost_0005_1", "body_cost_0005_1", "fleg_base_0001_1", "fleg_cost_0005_1",
+            "body_cost_dres_0005_1", "farm_base_0001_1", "head_hair_back_0005_1", "body_wing_0001_1",
+            "JumpEffect",
+            "Dust1",
+            "Dust2",
+            "Dust3",
+            "Rocks"
+        };
+
+        slotList.AddRange(slotsToAdd);
+
+        // var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+        // var attachment = slot.Attachment;
+
+        // var type = attachment.GetType();
+        // if (type is RegionAttachment)
+        // {
+        // }
+        // else if (type is MeshAttachment)
+        // {
+        // }
+        // else if (type is BoundingBoxAttachment)
+        // {
+        // }
+        // else if (type is PathAttachment)
+        // {
+        // }
+
         list = new List<string>();
-        string[] stringsToAdd = { "Axe", "Dust", "Idle Backward", "Idle Forward", "Jump Backward","Jump Forward","Laydown","Pickup", "Run Backward","Run Forward","Sit","Walk Backward","Walk Forward" };
+        string[] stringsToAdd =
+        {
+            "Axe", "Dust", "Idle Backward", "Idle Forward", "Jump Backward", "Jump Forward", "Laydown", "Pickup",
+            "Run Backward", "Run Forward", "Sit", "Walk Backward", "Walk Forward"
+        };
         list.AddRange(stringsToAdd);
         initBoo = true;
-        Debug.Log("====>",skeletonAnimation);
+        Debug.Log("====>", skeletonAnimation);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (updateRegion)
+        {
+            updateRegion = false;
+            return;
+        }
+
         if (initBoo == false)
         {
             return;
         }
-        if (count<=300)
+
+        if (count <= 300)
         {
             count++;
             return;
         }
+
         System.Random random = new System.Random();
         int randomNumber = random.Next(0, 13);
         var actionName = list[randomNumber];
         playSpine(actionName);
         count = 0;
+        if (_texture != null)
+        {
+            if (changeSlot != true)
+            {
+                changeSlot = true;
+                var slotName = slotList[13];
+                CreateRegionAttachmentByTexture(slotName, _texture);
+            }
+        }
     }
 
     void playSpine(string name)
     {
         // 播放动画
-        skeletonAnimation.AnimationState.SetAnimation(0, name, true); 
+        skeletonAnimation.AnimationState.SetAnimation(0, name, true);
     }
 
-    void changeSlot(string slotName,Attachment newAttachment)
+    void pauseSpine()
+    {
+        skeletonAnimation.AnimationState.ClearTracks();
+    }
+
+    /**
+     * 替换整体皮肤贴图
+     */
+    void changeSkin()
+    {
+    }
+
+    /**
+     * 替换槽位资源
+     */
+    void CreateRegionAttachmentByTexture(string slotName, Texture2D texture)
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
-        
+
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        // Replace the attachment in the skin
-        skin.SetAttachment(slot.Data.Index, attachment.Name, newAttachment);
-        
-        // Set the attachment on the slot
-        slot.Attachment = newAttachment;
+        var region = CreateRegion(texture);
+
+        RegionAttachment regionAttachment = (RegionAttachment)attachment;
+        var baseRegion = (AtlasRegion)regionAttachment.Region;
+        region.name = baseRegion.name;
+        region.u = baseRegion.u;
+        region.v = baseRegion.v;
+        region.u2 = baseRegion.u2;
+        region.v2 = baseRegion.v2;
+        regionAttachment.Region = region;
+        regionAttachment.UpdateRegion();
+        // regionAttachment.RenderObject = _texture;
+        // _texture = null;
+        // // Replace the attachment in the skin
+        // skin.SetAttachment(slot.Data.Index, attachment.Name, newAttachment);
+        //
+        // // Set the attachment on the slot
+        // slot.Attachment = newAttachment;
+    }
+
+    private AtlasRegion CreateRegion(Texture2D texture)
+    {
+        AtlasRegion region = new AtlasRegion();
+        region.width = texture.width / 2;
+        region.height = texture.height / 2;
+        region.packedWidth = region.width;
+        region.packedHeight = region.height;
+        region.originalWidth = texture.width;
+        region.originalHeight = texture.height;
+        region.rotate = false;
+        region.page = new AtlasPage();
+        region.page.name = texture.name;
+        region.page.width = texture.width;
+        region.page.height = texture.height;
+        region.page.uWrap = TextureWrap.ClampToEdge;
+        region.page.vWrap = TextureWrap.ClampToEdge;
+        region.page.magFilter = TextureFilter.Linear;
+        region.page.minFilter = TextureFilter.Linear;
+        region.page.pma = true;
+
+        // 创建一个新材质
+        Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
+
+        // 从纹理中加载材质
+        newMaterial.mainTexture = _texture;
+
+        // 将材质应用于渲染对象
+        region.page.rendererObject = newMaterial;
+        return region;
     }
 }
