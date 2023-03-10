@@ -177,45 +177,61 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        var region = CreateRegion(texture);
-
+        var region = CreateRegion((RegionAttachment)attachment, texture);
+        if (region == null)
+        {
+            return;
+        }
         RegionAttachment regionAttachment = (RegionAttachment)attachment;
-        var baseRegion = (AtlasRegion)regionAttachment.Region;
+        var baseRegion = (AtlasRegion)regionAttachment?.Region;
+        if (baseRegion != null)
+        {
+            
+            regionAttachment.Region = region;
+            regionAttachment.UpdateRegion();
+            // _texture = null;
+            // Replace the attachment in the skin
+            skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+            //
+            // Set the attachment on the slot
+            slot.Attachment = regionAttachment;
+        }
+    }
+
+    private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
+    {
+        var baseRegion = (AtlasRegion)attachment?.Region;
+        if (baseRegion == null)
+        {
+            return null;
+        }
+
+        AtlasRegion region = new AtlasRegion();
+        region.width = baseRegion.width;
+        region.height = baseRegion.height;
+        region.packedWidth = baseRegion.packedWidth;
+        region.packedHeight = baseRegion.packedHeight;
+        region.originalWidth = texture.width;
+        region.originalHeight = texture.height;
+        region.offsetX = baseRegion.offsetX;
+        region.offsetY = baseRegion.offsetY;
         region.name = baseRegion.name;
         region.u = baseRegion.u;
         region.v = baseRegion.v;
         region.u2 = baseRegion.u2;
         region.v2 = baseRegion.v2;
-        regionAttachment.Region = region;
-        regionAttachment.UpdateRegion();
-        // regionAttachment.RenderObject = _texture;
-        // _texture = null;
-        // // Replace the attachment in the skin
-        // skin.SetAttachment(slot.Data.Index, attachment.Name, newAttachment);
-        //
-        // // Set the attachment on the slot
-        // slot.Attachment = newAttachment;
-    }
-
-    private AtlasRegion CreateRegion(Texture2D texture)
-    {
-        AtlasRegion region = new AtlasRegion();
-        region.width = texture.width / 2;
-        region.height = texture.height / 2;
-        region.packedWidth = region.width;
-        region.packedHeight = region.height;
-        region.originalWidth = texture.width;
-        region.originalHeight = texture.height;
         region.rotate = false;
+        
         region.page = new AtlasPage();
         region.page.name = texture.name;
         region.page.width = texture.width;
         region.page.height = texture.height;
-        region.page.uWrap = TextureWrap.ClampToEdge;
-        region.page.vWrap = TextureWrap.ClampToEdge;
-        region.page.magFilter = TextureFilter.Linear;
-        region.page.minFilter = TextureFilter.Linear;
-        region.page.pma = true;
+        region.page.format = baseRegion.page.format;
+        region.page.magFilter = baseRegion.page.magFilter;
+        region.page.minFilter = baseRegion.page.minFilter;
+        region.page.pma = baseRegion.page.pma;
+        region.page.uWrap = baseRegion.page.uWrap;
+        region.page.vWrap = baseRegion.page.vWrap;
 
         // 创建一个新材质
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
@@ -225,6 +241,7 @@ public class SpineController : MonoBehaviour
 
         // 将材质应用于渲染对象
         region.page.rendererObject = newMaterial;
+
         return region;
     }
 }
