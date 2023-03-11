@@ -216,10 +216,10 @@ public class SpineController : MonoBehaviour
         region.offsetX = baseRegion.offsetX;
         region.offsetY = baseRegion.offsetY;
         region.name = baseRegion.name;
-        region.u = baseRegion.u;
-        region.v = baseRegion.v;
-        region.u2 = baseRegion.u2;
-        region.v2 = baseRegion.v2;
+        region.u = 0.25f;//baseRegion.u;
+        region.v = 0.81f;//baseRegion.v;
+        region.u2 = 0.75f;//baseRegion.u2;
+        region.v2 = 0.44f;//baseRegion.v2;
         region.rotate = false;
         
         region.page = new AtlasPage();
