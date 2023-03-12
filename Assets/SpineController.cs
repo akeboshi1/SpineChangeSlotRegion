@@ -182,11 +182,11 @@ public class SpineController : MonoBehaviour
         {
             return;
         }
+
         RegionAttachment regionAttachment = (RegionAttachment)attachment;
         var baseRegion = (AtlasRegion)regionAttachment?.Region;
         if (baseRegion != null)
         {
-            
             regionAttachment.Region = region;
             regionAttachment.UpdateRegion();
             // _texture = null;
@@ -207,21 +207,23 @@ public class SpineController : MonoBehaviour
         }
 
         AtlasRegion region = new AtlasRegion();
-        region.width = baseRegion.width;
-        region.height = baseRegion.height;
-        region.packedWidth = baseRegion.packedWidth;
-        region.packedHeight = baseRegion.packedHeight;
-        region.originalWidth = texture.width;
-        region.originalHeight = texture.height;
-        region.offsetX = baseRegion.offsetX;
-        region.offsetY = baseRegion.offsetY;
-        region.name = baseRegion.name;
+        // 定义图片的显示宽高
+        region.width = 38; //baseRegion.width;
+        region.height = 30; //baseRegion.height;
+        region.packedWidth = 38;//baseRegion.packedWidth;
+        region.packedHeight = 30;//baseRegion.packedHeight;
+        // 在显示图片的宽高上定义图片的截取范围
         region.u = 0.25f;//baseRegion.u;
         region.v = 0.81f;//baseRegion.v;
         region.u2 = 0.75f;//baseRegion.u2;
         region.v2 = 0.44f;//baseRegion.v2;
+        // 定义槽位图片的偏移
+        region.offsetX = baseRegion.offsetX;
+        region.offsetY = baseRegion.offsetY+10;
+        region.originalWidth = texture.width;
+        region.originalHeight = texture.height;
+        region.name = baseRegion.name;
         region.rotate = false;
-        
         region.page = new AtlasPage();
         region.page.name = texture.name;
         region.page.width = texture.width;
