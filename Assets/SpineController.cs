@@ -5,6 +5,7 @@ using Spine.Unity;
 using Spine.Unity.AttachmentTools;
 using Unity.Mathematics;
 using UnityEngine;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 public class SpineController : MonoBehaviour
@@ -133,7 +134,7 @@ public class SpineController : MonoBehaviour
         }
 
         System.Random random = new System.Random();
-        int randomNumber = random.Next(0, 13);
+        int randomNumber = 3;//random.Next(0, 13);
         var actionName = list[randomNumber];
         playSpine(actionName);
         count = 0;
@@ -142,7 +143,7 @@ public class SpineController : MonoBehaviour
             if (changeSlot != true)
             {
                 changeSlot = true;
-                var slotName = slotList[13];
+                var slotName = slotList[12];
                 CreateRegionAttachmentByTexture(slotName, _texture);
             }
         }
@@ -177,30 +178,59 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        var region = CreateRegion((RegionAttachment)attachment, texture);
+        var type = attachment.GetType();
+        AtlasRegion region;
+        if (attachment is Spine.RegionAttachment)
+        {
+            region = CreateRegion((RegionAttachment)attachment, texture);
+            RegionAttachment regionAttachment = (RegionAttachment)attachment;
+            var baseRegion = (AtlasRegion)regionAttachment?.Region;
+            if (baseRegion != null)
+            {
+                regionAttachment.Region = region;
+                regionAttachment.UpdateRegion();
+                // _texture = null;
+                // Replace the attachment in the skin
+                skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+                //
+                // Set the attachment on the slot
+                slot.Attachment = regionAttachment;
+            }
+        }
+        else if (attachment is Spine.MeshAttachment)
+        {
+            region = CreateRegion((MeshAttachment)attachment, texture);
+            MeshAttachment regionAttachment = (MeshAttachment)attachment;
+            var baseRegion = (AtlasRegion)regionAttachment?.Region;
+            if (baseRegion != null)
+            {
+                regionAttachment.Region = region;
+                regionAttachment.UpdateRegion();
+                // _texture = null;
+                // Replace the attachment in the skin
+                skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+                //
+                // Set the attachment on the slot
+                slot.Attachment = regionAttachment;
+            }
+        }
+        else
+        {
+            region = null;
+        }
+
         if (region == null)
         {
             return;
         }
 
-        RegionAttachment regionAttachment = (RegionAttachment)attachment;
-        var baseRegion = (AtlasRegion)regionAttachment?.Region;
-        if (baseRegion != null)
-        {
-            regionAttachment.Region = region;
-            regionAttachment.UpdateRegion();
-            // _texture = null;
-            // Replace the attachment in the skin
-            skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
-            //
-            // Set the attachment on the slot
-            slot.Attachment = regionAttachment;
-        }
+       
     }
 
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
     {
         var baseRegion = (AtlasRegion)attachment?.Region;
+
         if (baseRegion == null)
         {
             return null;
@@ -212,7 +242,48 @@ public class SpineController : MonoBehaviour
 
         // 获取没个贴图自身实际的uv值
         calculateRuntimeUV(region, texture);
-        
+
+        region.name = baseRegion.name;
+        region.rotate = false;
+        region.page = new AtlasPage();
+        region.page.name = texture.name;
+        region.page.width = texture.width;
+        region.page.height = texture.height;
+        region.page.format = baseRegion.page.format;
+        region.page.magFilter = baseRegion.page.magFilter;
+        region.page.minFilter = baseRegion.page.minFilter;
+        region.page.pma = baseRegion.page.pma;
+        region.page.uWrap = baseRegion.page.uWrap;
+        region.page.vWrap = baseRegion.page.vWrap;
+
+        // 创建一个新材质
+        Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
+
+        // 从纹理中加载材质
+        newMaterial.mainTexture = _texture;
+
+        // 将材质应用于渲染对象
+        region.page.rendererObject = newMaterial;
+
+        return region;
+    }
+
+    private AtlasRegion CreateRegion(MeshAttachment attachment, Texture2D texture)
+    {
+        var baseRegion = (AtlasRegion)attachment?.Region;
+
+        if (baseRegion == null)
+        {
+            return null;
+        }
+
+
+        AtlasRegion region = new AtlasRegion();
+
+
+        // 获取没个贴图自身实际的uv值
+        calculateRuntimeUV(region, texture);
+
         region.name = baseRegion.name;
         region.rotate = false;
         region.page = new AtlasPage();
@@ -264,6 +335,7 @@ public class SpineController : MonoBehaviour
                 }
             }
         }
+
         region.originalWidth = texture.width;
         region.originalHeight = texture.height;
         var curWid = rect.xMax - rect.xMin;
@@ -278,7 +350,7 @@ public class SpineController : MonoBehaviour
         region.v = rect.yMax / height;
         region.u2 = rect.xMax / width;
         region.v2 = rect.yMin / height;
-        
+
         // 定义槽位图片的偏移
         region.offsetX = 0;
         region.offsetY = 0;
