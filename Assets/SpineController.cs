@@ -206,22 +206,13 @@ public class SpineController : MonoBehaviour
             return null;
         }
 
+
         AtlasRegion region = new AtlasRegion();
-        // 定义图片的显示宽高
-        region.width = 38; //baseRegion.width;
-        region.height = 30; //baseRegion.height;
-        region.packedWidth = 38;//baseRegion.packedWidth;
-        region.packedHeight = 30;//baseRegion.packedHeight;
-        // 在显示图片的宽高上定义图片的截取范围
-        region.u = 0.25f;//baseRegion.u;
-        region.v = 0.81f;//baseRegion.v;
-        region.u2 = 0.75f;//baseRegion.u2;
-        region.v2 = 0.44f;//baseRegion.v2;
-        // 定义槽位图片的偏移
-        region.offsetX = baseRegion.offsetX;
-        region.offsetY = baseRegion.offsetY+10;
-        region.originalWidth = texture.width;
-        region.originalHeight = texture.height;
+
+
+        // 获取没个贴图自身实际的uv值
+        calculateRuntimeUV(region, texture);
+        
         region.name = baseRegion.name;
         region.rotate = false;
         region.page = new AtlasPage();
@@ -245,5 +236,58 @@ public class SpineController : MonoBehaviour
         region.page.rendererObject = newMaterial;
 
         return region;
+    }
+
+    /**
+     * 动态计算region的参数
+     */
+    private void calculateRuntimeUV(AtlasRegion region, Texture2D texture)
+    {
+        // 获取纹理的宽度和高度
+        var width = texture.width;
+        var height = texture.height;
+
+        // 获取有效像素区域
+        var pixels = texture.GetPixels();
+        var rect = new Rect(0, 0, width, height);
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                var pixel = pixels[y * width + x];
+                if (pixel.a > 0)
+                {
+                    rect.xMin = Mathf.Min(rect.xMin, x);
+                    rect.xMax = Mathf.Max(rect.xMax, x + 1);
+                    rect.yMin = Mathf.Min(rect.yMin, y);
+                    rect.yMax = Mathf.Max(rect.yMax, y + 1);
+                }
+            }
+        }
+        region.originalWidth = texture.width;
+        region.originalHeight = texture.height;
+        var curWid = rect.xMax - rect.xMin;
+        var curHei = rect.yMax - rect.yMin;
+        // 定义图片的显示宽高
+        region.width = (int)curWid;
+        region.height = (int)curHei;
+        region.packedWidth = (int)curWid;
+        region.packedHeight = (int)curHei;
+        // 计算UV坐标
+        region.u = rect.xMin / width;
+        region.v = rect.yMax / height;
+        region.u2 = rect.xMax / width;
+        region.v2 = rect.yMin / height;
+        
+        // 定义槽位图片的偏移
+        region.offsetX = 0;
+        region.offsetY = 0;
+        var uvBottomLeft = new Vector2(rect.xMin / width, rect.yMin / height);
+        var uvBottomRight = new Vector2(rect.xMax / width, rect.yMin / height);
+        var uvTopLeft = new Vector2(rect.xMin / width, rect.yMax / height);
+        var uvTopRight = new Vector2(rect.xMax / width, rect.yMax / height);
+
+        // 输出UV坐标
+        Debug.Log("UV: " + uvBottomLeft + ", " + uvBottomRight + ", " + uvTopLeft + ", " + uvTopRight);
     }
 }
