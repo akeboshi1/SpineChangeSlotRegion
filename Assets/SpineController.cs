@@ -178,9 +178,8 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        var type = attachment.GetType();
         AtlasRegion region;
-        if (attachment is Spine.RegionAttachment)
+        if (attachment is RegionAttachment)
         {
             region = CreateRegion((RegionAttachment)attachment, texture);
             RegionAttachment regionAttachment = (RegionAttachment)attachment;
@@ -189,7 +188,6 @@ public class SpineController : MonoBehaviour
             {
                 regionAttachment.Region = region;
                 regionAttachment.UpdateRegion();
-                // _texture = null;
                 // Replace the attachment in the skin
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
@@ -197,7 +195,7 @@ public class SpineController : MonoBehaviour
                 slot.Attachment = regionAttachment;
             }
         }
-        else if (attachment is Spine.MeshAttachment)
+        else if (attachment is MeshAttachment)
         {
             region = CreateRegion((MeshAttachment)attachment, texture);
             MeshAttachment regionAttachment = (MeshAttachment)attachment;
@@ -206,7 +204,6 @@ public class SpineController : MonoBehaviour
             {
                 regionAttachment.Region = region;
                 regionAttachment.UpdateRegion();
-                // _texture = null;
                 // Replace the attachment in the skin
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
