@@ -10,7 +10,67 @@ using Random = UnityEngine.Random;
 
 public class SpineController : MonoBehaviour
 {
+
+    private string preActionName = "Idle Forward";
+    public string curActionName = "Idle Forwar";
     public Texture2D _texture;
+
+
+    // head
+    public Texture2D head_hair_front_texture;
+    public Texture2D head_hair_back_texture;
+    public Texture2D head_base_front_texture;
+    public Texture2D head_base_back_texture;
+    public Texture2D head_eye_texture;
+    public Texture2D head_face_texture;
+    public Texture2D head_mous_texture;
+    public Texture2D head_hats_front_texture;
+    public Texture2D head_hats_back_texture;
+
+    // body
+    public Texture2D body_base_front_texture;
+    public Texture2D body_base_back_texture;
+    public Texture2D body_cost_front_texture;
+    public Texture2D body_cost_back_texture;
+    public Texture2D body_wing_front_texture;
+    public Texture2D body_wing_back_texture;
+
+    // barm back
+    // 右手
+    public Texture2D barm_base_1_texture;
+
+    // 左手
+    public Texture2D barm_base_3_texture;
+
+    // farm front
+    // 右手
+    public Texture2D farm_base_1_texture;
+
+    // 左手
+    public Texture2D farm_base_3_texture;
+
+    // bleg back
+    // 右腿
+    public Texture2D bleg_base_1_texture;
+
+    // 左腿
+    public Texture2D bleg_base_3_texture;
+
+    public Texture2D bleg_cost_1_texture;
+
+    public Texture2D bleg_cost_3_texture;
+
+    // fleg front
+    // 右腿
+    public Texture2D fleg_base_1_texture;
+
+    // 左腿
+    public Texture2D fleg_base_3_texture;
+
+    public Texture2D fleg_cost_1_texture;
+
+    public Texture2D fleg_cost_3_texture;
+
     private SkeletonAnimation skeletonAnimation;
 
     private List<string> list;
@@ -85,23 +145,6 @@ public class SpineController : MonoBehaviour
 
         slotList.AddRange(slotsToAdd);
 
-        // var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
-        // var attachment = slot.Attachment;
-
-        // var type = attachment.GetType();
-        // if (type is RegionAttachment)
-        // {
-        // }
-        // else if (type is MeshAttachment)
-        // {
-        // }
-        // else if (type is BoundingBoxAttachment)
-        // {
-        // }
-        // else if (type is PathAttachment)
-        // {
-        // }
-
         list = new List<string>();
         string[] stringsToAdd =
         {
@@ -110,6 +153,13 @@ public class SpineController : MonoBehaviour
         };
         list.AddRange(stringsToAdd);
         initBoo = true;
+        
+        System.Random random = new System.Random();
+        int randomNumber = random.Next(0, 13);
+        var actionName = list[randomNumber];
+        actionName = "Idle Forward";
+        curActionName = actionName;
+        
         Debug.Log("====>", skeletonAnimation);
     }
 
@@ -127,17 +177,19 @@ public class SpineController : MonoBehaviour
             return;
         }
 
-        if (count <= 300)
+        if (curActionName != preActionName)
         {
-            count++;
-            return;
+            playSpine(curActionName);
+            preActionName = curActionName;
         }
 
-        System.Random random = new System.Random();
-        int randomNumber = 3;//random.Next(0, 13);
-        var actionName = list[randomNumber];
-        playSpine(actionName);
-        count = 0;
+        // if (count <= 300)
+        // {
+        //     count++;
+        //     return;
+        // }
+
+        // count = 0;
         if (_texture != null)
         {
             if (changeSlot != true)
@@ -220,8 +272,6 @@ public class SpineController : MonoBehaviour
         {
             return;
         }
-
-       
     }
 
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)

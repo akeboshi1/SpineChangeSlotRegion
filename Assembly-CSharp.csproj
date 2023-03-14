@@ -42,12 +42,16 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/SpineController.cs" />
+     <Compile Include="Assets/DragonBonesController.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/Spine" />
      <None Include="Assets/Spine/version.txt" />
+     <None Include="Assets/Dragonbones/bones_human01_tex.json" />
      <Folder Include="Assets/Scenes" />
      <None Include="Assets/Spine/package.json" />
+     <None Include="Assets/Dragonbones/bones_human01_ske.json" />
      <None Include="Assets/Spine_Character_Test.atlas.txt" />
+     <Folder Include="Assets/Dragonbones" />
      <Reference Include="UnityEngine">
      <HintPath>/Users/gxm/workspace/Unity/engine/2021.3.19f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
      </Reference>
@@ -834,6 +838,10 @@
     <ProjectReference Include="spine-csharp.csproj">
       <Project>{17a7d3c3-5c49-546d-6828-521c1ee826c8}</Project>
       <Name>spine-csharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="DragonBones.csproj">
+      <Project>{5b039f8a-036b-e6f2-ff9d-6528f7f89ba2}</Project>
+      <Name>DragonBones</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
