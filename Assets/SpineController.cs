@@ -12,70 +12,118 @@ public class SpineController : MonoBehaviour
 {
 
     private string preActionName = "Idle Forward";
-    public string curActionName = "Idle Forwar";
-    public Texture2D _texture;
-
-
+    public string curActionName = "Idle Forward";
+   
     // head
-    public Texture2D head_hair_front_texture;
-    public Texture2D head_hair_back_texture;
-    public Texture2D head_base_front_texture;
-    public Texture2D head_base_back_texture;
+    public Texture2D head_hair_front_1_texture;
+    public Texture2D head_hair_front_3_texture;
+    public Texture2D head_hair_back_1_texture;
+    public Texture2D head_hair_back_3_texture;
+    public Texture2D head_base_1_texture;
+    public Texture2D head_base_3_texture;
     public Texture2D head_eye_texture;
-    public Texture2D head_face_texture;
+    public Texture2D head_face_3_texture;
+    public Texture2D head_face_1_texture;
     public Texture2D head_mous_texture;
-    public Texture2D head_hats_front_texture;
-    public Texture2D head_hats_back_texture;
+    public Texture2D head_hats_1_texture;
+    public Texture2D head_hats_3_texture;
 
     // body
-    public Texture2D body_base_front_texture;
-    public Texture2D body_base_back_texture;
-    public Texture2D body_cost_front_texture;
-    public Texture2D body_cost_back_texture;
-    public Texture2D body_wing_front_texture;
-    public Texture2D body_wing_back_texture;
+    public Texture2D body_base_1_texture;
+    public Texture2D body_base_3_texture;
+    public Texture2D body_cost_1_texture;
+    public Texture2D body_cost_3_texture;
+    public Texture2D body_cost_dres_1_texture;
+    public Texture2D body_cost_dres_3_texture;
+    public Texture2D body_wing_1_texture;
+    public Texture2D body_wing_3_texture;
 
-    // barm back
-    // 右手
+    // barm
+    // 背面右手
     public Texture2D barm_base_1_texture;
-
-    // 左手
+    // 正面右手
     public Texture2D barm_base_3_texture;
-
-    // farm front
-    // 右手
+    
+    // farm
+    // 背面左手
     public Texture2D farm_base_1_texture;
-
-    // 左手
+    // 正面左手
     public Texture2D farm_base_3_texture;
 
-    // bleg back
-    // 右腿
+    // bleg
+    // 背面右腿
     public Texture2D bleg_base_1_texture;
-
-    // 左腿
+    // 正面右腿
     public Texture2D bleg_base_3_texture;
-
+    
     public Texture2D bleg_cost_1_texture;
-
     public Texture2D bleg_cost_3_texture;
 
-    // fleg front
-    // 右腿
+    // fleg
+    // 背面左腿
     public Texture2D fleg_base_1_texture;
-
-    // 左腿
+    // 正面左腿
     public Texture2D fleg_base_3_texture;
-
     public Texture2D fleg_cost_1_texture;
-
     public Texture2D fleg_cost_3_texture;
+    
+    //======上一次替换的贴图，用于替换逻辑======
+    private Texture2D _head_hair_front_1_texture;
+    private Texture2D _head_hair_front_3_texture;
+    private Texture2D _head_hair_back_1_texture;
+    private Texture2D _head_hair_back_3_texture;
+    private Texture2D _head_base_1_texture;
+    private Texture2D _head_base_3_texture;
+    private Texture2D _head_eye_texture;
+    private Texture2D _head_face_1_texture;
+    private Texture2D _head_face_3_texture;
+    private Texture2D _head_mous_texture;
+    private Texture2D _head_hats_1_texture;
+    private Texture2D _head_hats_3_texture;
+
+    // body
+    private Texture2D _body_base_1_texture;
+    private Texture2D _body_base_3_texture;
+    private Texture2D _body_cost_1_texture;
+    private Texture2D _body_cost_3_texture;
+    private Texture2D _body_cost_dres_1_texture;
+    private Texture2D _body_cost_dres_3_texture;
+    private Texture2D _body_wing_1_texture;
+    private Texture2D _body_wing_3_texture;
+
+    // barm
+    // 背面右手
+    public Texture2D _barm_base_1_texture;
+    // 正面右手
+    public Texture2D _barm_base_3_texture;
+    
+    // farm
+    // 背面左手
+    public Texture2D _farm_base_1_texture;
+    // 正面左手
+    public Texture2D _farm_base_3_texture;
+
+    // bleg
+    // 背面右腿
+    private Texture2D _bleg_base_1_texture;
+    // 正面右腿
+    private Texture2D _bleg_base_3_texture;
+    private Texture2D _bleg_cost_1_texture;
+    private Texture2D _bleg_cost_3_texture;
+
+    // fleg
+    // 背面左腿
+    private Texture2D _fleg_base_1_texture;
+    // 正面左腿
+    private Texture2D _fleg_base_3_texture;
+    private Texture2D _fleg_cost_1_texture;
+    private Texture2D _fleg_cost_3_texture;
+    
+    
 
     private SkeletonAnimation skeletonAnimation;
 
     private List<string> list;
-
-    private int count = 0;
 
     private string skinName = "default";
 
@@ -88,12 +136,9 @@ public class SpineController : MonoBehaviour
     private bool initBoo = false;
 
     private bool updateRegion = false;
-
-    private bool changeSlot = false;
-
+    
     private List<string> slotList;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         skeletonAnimation = GetComponent<SkeletonAnimation>();
@@ -133,7 +178,7 @@ public class SpineController : MonoBehaviour
             "head_face_0001_3",
             "farm_base_0001_3",
             "head_face_0001_1",
-            "head_base_0001_", "head_hair_0005_1", "barm_base_0001_1", "bleg_base_0001_1", "head_hats_0001_1",
+            "head_base_0001_1", "head_hair_0005_1", "barm_base_0001_1", "bleg_base_0001_1", "head_hats_0001_1",
             "body_base_0001_1", "bleg_cost_0005_1", "body_cost_0005_1", "fleg_base_0001_1", "fleg_cost_0005_1",
             "body_cost_dres_0005_1", "farm_base_0001_1", "head_hair_back_0005_1", "body_wing_0001_1",
             "JumpEffect",
@@ -176,28 +221,251 @@ public class SpineController : MonoBehaviour
         {
             return;
         }
-
+        checkSlots();
         if (curActionName != preActionName)
         {
             playSpine(curActionName);
             preActionName = curActionName;
         }
+    }
 
-        // if (count <= 300)
-        // {
-        //     count++;
-        //     return;
-        // }
+    void checkSlots()
+    {
 
-        // count = 0;
-        if (_texture != null)
+        // ===== head
+        // 前层头发正面
+        if (head_hair_front_3_texture != _head_hair_front_3_texture)
         {
-            if (changeSlot != true)
-            {
-                changeSlot = true;
-                var slotName = slotList[12];
-                CreateRegionAttachmentByTexture(slotName, _texture);
-            }
+            var slotName = slotList[13];
+            CreateRegionAttachmentByTexture(slotName, head_hair_front_3_texture);
+            _head_hair_front_3_texture = head_hair_front_3_texture;
+        }
+        // 前层头发背面
+        if (head_hair_front_1_texture != _head_hair_front_1_texture)
+        {
+            var slotName = slotList[21];
+            CreateRegionAttachmentByTexture(slotName, head_hair_front_1_texture);
+            _head_hair_front_1_texture = head_hair_front_1_texture;
+        }
+        // 后层头发正面
+        if (head_hair_back_3_texture != _head_hair_back_3_texture)
+        {
+            var slotName = slotList[0];
+            CreateRegionAttachmentByTexture(slotName, head_hair_back_3_texture);
+            _head_hair_back_3_texture = head_hair_back_3_texture;
+        }
+        // 后层头发背面
+        if (head_hair_back_1_texture != _head_hair_back_1_texture)
+        {
+            var slotName = slotList[32];
+            CreateRegionAttachmentByTexture(slotName, head_hair_back_1_texture);
+            _head_hair_back_1_texture = head_hair_back_1_texture;
+        }
+        // 正面头部
+        if (head_base_3_texture != _head_base_3_texture)
+        {
+            var slotName = slotList[11];
+            CreateRegionAttachmentByTexture(slotName, head_base_3_texture);
+            _head_base_3_texture = head_base_3_texture;
+        }
+        // 背面头部
+        if (head_base_1_texture != _head_base_1_texture)
+        {
+            var slotName = slotList[20];
+            CreateRegionAttachmentByTexture(slotName, head_base_1_texture);
+            _head_base_1_texture = head_base_1_texture;
+        }
+        // 嘴巴
+        if (head_mous_texture != _head_mous_texture)
+        {
+            var slotName = slotList[15];
+            CreateRegionAttachmentByTexture(slotName, head_mous_texture);
+            _head_mous_texture = head_mous_texture;
+        }
+        // 眼睛
+        if (head_eye_texture != _head_eye_texture)
+        {
+            var slotName = slotList[12];
+            CreateRegionAttachmentByTexture(slotName, head_eye_texture);
+            _head_eye_texture = head_eye_texture;
+        }
+        // 背面头饰
+        if (head_hats_1_texture != _head_hats_1_texture)
+        {
+            var slotName = slotList[24];
+            CreateRegionAttachmentByTexture(slotName, head_hats_1_texture);
+            _head_hats_1_texture = head_hats_1_texture;
+        }
+        // 正面头饰
+        if (head_hats_3_texture != _head_hats_3_texture)
+        {
+            var slotName = slotList[14];
+            CreateRegionAttachmentByTexture(slotName, head_hats_3_texture);
+            _head_hats_3_texture = head_hats_3_texture;
+        }
+        // 背面脸
+        if (head_face_1_texture != _head_face_1_texture)
+        {
+            var slotName = slotList[19];
+            CreateRegionAttachmentByTexture(slotName, head_face_1_texture);
+            _head_face_1_texture = head_face_1_texture;
+        }
+        // 正面脸
+        if (head_face_3_texture != _head_face_3_texture)
+        {
+            var slotName = slotList[17];
+            CreateRegionAttachmentByTexture(slotName, head_face_3_texture);
+            _head_face_3_texture = head_face_3_texture;
+        }
+        
+        // ===== body
+        // 背面翅膀
+        if (body_wing_1_texture != _body_wing_1_texture)
+        {
+            var slotName = slotList[33];
+            CreateRegionAttachmentByTexture(slotName, body_wing_1_texture);
+            _body_wing_1_texture = body_wing_1_texture;
+        }
+        // 正面翅膀
+        if (body_wing_3_texture != _body_wing_3_texture)
+        {
+            var slotName = slotList[5];
+            CreateRegionAttachmentByTexture(slotName, body_wing_3_texture);
+            _body_wing_3_texture = body_wing_3_texture;
+        }
+        // 正面身体
+        if (body_base_3_texture != _body_base_3_texture)
+        {
+            var slotName = slotList[1];
+            CreateRegionAttachmentByTexture(slotName, body_base_3_texture);
+            _body_base_3_texture = body_base_3_texture;
+        }
+        // 背面身体
+        if (body_base_1_texture != _body_base_1_texture)
+        {
+            var slotName = slotList[25];
+            CreateRegionAttachmentByTexture(slotName, body_base_1_texture);
+            _body_base_1_texture = body_base_1_texture;
+        }
+        // 正面衣服
+        if (body_cost_3_texture != _body_cost_3_texture)
+        {
+            var slotName = slotList[10];
+            CreateRegionAttachmentByTexture(slotName, body_cost_3_texture);
+            _body_cost_3_texture = body_cost_3_texture;
+        }
+        // 背面衣服
+        if (body_cost_1_texture != _body_cost_1_texture)
+        {
+            var slotName = slotList[27];
+            CreateRegionAttachmentByTexture(slotName, body_cost_1_texture);
+            _body_cost_1_texture = body_cost_1_texture;
+        }
+        // 正面裙子
+        if (body_cost_dres_3_texture != _body_cost_dres_3_texture)
+        {
+            var slotName = slotList[9];
+            CreateRegionAttachmentByTexture(slotName, body_cost_dres_3_texture);
+            _body_cost_dres_3_texture = body_cost_dres_3_texture;
+        }
+        // 背面裙子
+        if (body_cost_dres_1_texture != _body_cost_dres_1_texture)
+        {
+            var slotName = slotList[30];
+            CreateRegionAttachmentByTexture(slotName, body_cost_dres_1_texture);
+            _body_cost_dres_1_texture = body_cost_dres_1_texture;
+        }
+        
+        // ===== 四肢
+        // === 手
+        // 正面左手
+        if (farm_base_3_texture != _farm_base_3_texture)
+        {
+            var slotName = slotList[18];
+            CreateRegionAttachmentByTexture(slotName, farm_base_3_texture);
+            _farm_base_3_texture = farm_base_3_texture;
+        }
+        // 背面左手
+        if (farm_base_1_texture != _farm_base_1_texture)
+        {
+            var slotName = slotList[31];
+            CreateRegionAttachmentByTexture(slotName, farm_base_1_texture);
+            _farm_base_1_texture = farm_base_1_texture;
+        }
+        // 正面右手
+        if (barm_base_3_texture != _barm_base_3_texture)
+        {
+            var slotName = slotList[2];
+            CreateRegionAttachmentByTexture(slotName, barm_base_3_texture);
+            _barm_base_3_texture = barm_base_3_texture;
+        }
+        // 背面右手
+        if (barm_base_1_texture != _barm_base_1_texture)
+        {
+            var slotName = slotList[22];
+            CreateRegionAttachmentByTexture(slotName, barm_base_1_texture);
+            _barm_base_1_texture = barm_base_1_texture;
+        }
+        
+        // === 脚
+        // 正面右脚
+        if (bleg_base_3_texture != _bleg_base_3_texture)
+        {
+            var slotName = slotList[4];
+            CreateRegionAttachmentByTexture(slotName, bleg_base_3_texture);
+            _bleg_base_3_texture = bleg_base_3_texture;
+        }
+        // 背面右脚
+        if (bleg_base_1_texture != _bleg_base_1_texture)
+        {
+            var slotName = slotList[23];
+            CreateRegionAttachmentByTexture(slotName, bleg_base_1_texture);
+            _bleg_base_1_texture = bleg_base_1_texture;
+        }
+        
+        // 正面右脚装饰
+        if (bleg_cost_3_texture != _bleg_cost_3_texture)
+        {
+            var slotName = slotList[8];
+            CreateRegionAttachmentByTexture(slotName, bleg_cost_3_texture);
+            _bleg_cost_3_texture = bleg_cost_3_texture;
+        }
+        // 背面右脚装饰
+        if (bleg_cost_1_texture != _bleg_cost_1_texture)
+        {
+            var slotName = slotList[26];
+            CreateRegionAttachmentByTexture(slotName, bleg_cost_1_texture);
+            _bleg_cost_1_texture = bleg_cost_1_texture;
+        }
+        
+        // 正面左脚
+        if (fleg_base_3_texture != _fleg_base_3_texture)
+        {
+            var slotName = slotList[7];
+            CreateRegionAttachmentByTexture(slotName, fleg_base_3_texture);
+            _fleg_base_3_texture = fleg_base_3_texture;
+        }
+        // 背面左脚
+        if (fleg_base_1_texture != _fleg_base_1_texture)
+        {
+            var slotName = slotList[28];
+            CreateRegionAttachmentByTexture(slotName, fleg_base_1_texture);
+            _fleg_base_1_texture = fleg_base_1_texture;
+        }
+        
+        // 正面左脚装饰
+        if (fleg_cost_3_texture != _fleg_cost_3_texture)
+        {
+            var slotName = slotList[6];
+            CreateRegionAttachmentByTexture(slotName, fleg_cost_3_texture);
+            _fleg_cost_3_texture = fleg_cost_3_texture;
+        }
+        // 背面左脚装饰
+        if (fleg_cost_1_texture != _fleg_cost_1_texture)
+        {
+            var slotName = slotList[29];
+            CreateRegionAttachmentByTexture(slotName, fleg_cost_1_texture);
+            _fleg_cost_1_texture = fleg_cost_1_texture;
         }
     }
 
@@ -212,8 +480,9 @@ public class SpineController : MonoBehaviour
         skeletonAnimation.AnimationState.ClearTracks();
     }
 
+    //============== 替换逻辑 ==============
     /**
-     * 替换整体皮肤贴图
+     * todo替换整体皮肤贴图
      */
     void changeSkin()
     {
@@ -307,7 +576,7 @@ public class SpineController : MonoBehaviour
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
 
         // 从纹理中加载材质
-        newMaterial.mainTexture = _texture;
+        newMaterial.mainTexture = texture;
 
         // 将材质应用于渲染对象
         region.page.rendererObject = newMaterial;
@@ -348,7 +617,7 @@ public class SpineController : MonoBehaviour
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
 
         // 从纹理中加载材质
-        newMaterial.mainTexture = _texture;
+        newMaterial.mainTexture = texture;
 
         // 将材质应用于渲染对象
         region.page.rendererObject = newMaterial;

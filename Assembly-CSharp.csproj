@@ -751,9 +751,6 @@
      <Reference Include="Unity.2D.Path.Editor">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.2D.Path.Editor.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.2D.Psdimporter.Editor">
-     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.2D.Psdimporter.Editor.dll</HintPath>
-     </Reference>
      <Reference Include="Unity.VisualScripting.Flow">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.VisualScripting.Flow.dll</HintPath>
      </Reference>
@@ -766,14 +763,17 @@
      <Reference Include="Unity.Rider.Editor">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
      </Reference>
-     <Reference Include="Unity.InternalAPIEditorBridge.001">
-     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.InternalAPIEditorBridge.001.dll</HintPath>
+     <Reference Include="Unity.2D.Psdimporter.Editor">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.2D.Psdimporter.Editor.dll</HintPath>
      </Reference>
      <Reference Include="UnityEngine.UI">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
      </Reference>
      <Reference Include="Unity.2D.Tilemap.Extras.Editor">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.InternalAPIEditorBridge.001">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.InternalAPIEditorBridge.001.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Core">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.VisualScripting.Core.dll</HintPath>
@@ -831,6 +831,10 @@
       <Project>{83eb69fd-2597-1f59-68b3-40454f15a3a5}</Project>
       <Name>spine-unity-examples</Name>
     </ProjectReference>
+    <ProjectReference Include="DragonBones.csproj">
+      <Project>{5b039f8a-036b-e6f2-ff9d-6528f7f89ba2}</Project>
+      <Name>DragonBones</Name>
+    </ProjectReference>
     <ProjectReference Include="spine-unity-editor.csproj">
       <Project>{a1c81f76-2bdd-a906-0245-1d113bd69bef}</Project>
       <Name>spine-unity-editor</Name>
@@ -838,10 +842,6 @@
     <ProjectReference Include="spine-csharp.csproj">
       <Project>{17a7d3c3-5c49-546d-6828-521c1ee826c8}</Project>
       <Name>spine-csharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="DragonBones.csproj">
-      <Project>{5b039f8a-036b-e6f2-ff9d-6528f7f89ba2}</Project>
-      <Name>DragonBones</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

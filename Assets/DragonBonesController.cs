@@ -21,7 +21,9 @@ public class DragonBonesController : MonoBehaviour
         {
             var slotName = slot.name;
             var strArr = slotName.Split("_");
-            if (strArr[0] == "Type" || strArr[1] == "spec" || strArr[1] == "hats" || strArr[1] == "mask" ||
+            if (slotName == "barm_cost_3" || slotName == "farm_cost_3" || slotName == "head_chin_3" ||
+                slotName == "farm_shld_3" || strArr[0] == "Type" || strArr[1] == "spec" || strArr[1] == "hats" ||
+                strArr[1] == "mask" ||
                 strArr[1] == "weap" || strArr[1] == "scar" || strArr[2] == "1")
             {
                 slot.visible = false;

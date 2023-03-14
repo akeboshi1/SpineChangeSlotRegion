@@ -42,11 +42,11 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Packages/Dragonbones/Editor/UnityArmatureEditor.cs" />
-     <Compile Include="Packages/Dragonbones/Editor/UnityEditor.cs" />
-     <Compile Include="Packages/Dragonbones/Editor/PickJsonDataWindow.cs" />
      <Compile Include="Packages/Dragonbones/Editor/ShowSlotsWindow.cs" />
-     <Compile Include="Packages/Dragonbones/Editor/AssetProcess.cs" />
      <Compile Include="Packages/Dragonbones/Editor/DragonBonesIcons.cs" />
+     <Compile Include="Packages/Dragonbones/Editor/AssetProcess.cs" />
+     <Compile Include="Packages/Dragonbones/Editor/PickJsonDataWindow.cs" />
+     <Compile Include="Packages/Dragonbones/Editor/UnityEditor.cs" />
      <Folder Include="Packages/Dragonbones/Editor" />
      <None Include="Packages/Dragonbones/Editor/DragonBones-Editor.asmdef" />
      <Folder Include="Packages/Dragonbones/Editor/GUI" />
