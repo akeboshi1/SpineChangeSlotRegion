@@ -42,13 +42,14 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/SpineController.cs" />
-     <Compile Include="Assets/DragonBonesController.cs" />
      <Compile Include="Assets/Main.cs" />
+     <Compile Include="Assets/DragonBonesController.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/Spine" />
      <None Include="Assets/Spine/version.txt" />
      <None Include="Assets/Dragonbones/bones_human01_tex.json" />
      <Folder Include="Assets/Scenes" />
+     <Folder Include="Assets/Resources" />
      <None Include="Assets/Spine/package.json" />
      <None Include="Assets/Dragonbones/bones_human01_ske.json" />
      <None Include="Assets/Spine_Character_Test.atlas.txt" />
@@ -817,6 +818,18 @@
      </Reference>
      <Reference Include="Unity.VisualScripting.State">
      <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.EditorCoroutines.Editor">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.MemoryProfiler.Editor">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.MemoryProfiler.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.MemoryProfiler">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.MemoryProfiler.dll</HintPath>
+     </Reference>
+     <Reference Include="Unity.MemoryProfiler.Editor.MemoryProfilerModule">
+     <HintPath>/Users/gxm/workspace/Unity/TestSpine/Library/ScriptAssemblies/Unity.MemoryProfiler.Editor.MemoryProfilerModule.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>
