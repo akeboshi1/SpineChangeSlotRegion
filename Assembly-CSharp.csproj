@@ -43,6 +43,7 @@
   <ItemGroup>
      <Compile Include="Assets/SpineController.cs" />
      <Compile Include="Assets/DragonBonesController.cs" />
+     <Compile Include="Assets/Main.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/Spine" />
      <None Include="Assets/Spine/version.txt" />
