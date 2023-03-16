@@ -701,6 +701,75 @@ public class SpineController : MonoBehaviour
         }
     }
 
+    public void clearAllCustomTex()
+    {
+        head_hair_front_1_texture = null;
+        head_hair_front_3_texture = null;
+        head_hair_back_1_texture = null;
+        head_hair_back_3_texture = null;
+        head_base_1_texture = null;
+        head_base_3_texture = null;
+        head_eye_texture = null;
+        head_face_3_texture = null;
+        head_face_1_texture = null;
+        head_mous_texture = null;
+        head_hats_1_texture = null;
+        head_hats_3_texture = null;
+        body_base_1_texture = null;
+        body_base_3_texture = null;
+        body_cost_1_texture = null;
+        body_cost_3_texture = null;
+        body_cost_dres_1_texture = null;
+        body_cost_dres_3_texture = null;
+        body_wing_1_texture = null;
+        body_wing_3_texture = null;
+        barm_base_1_texture = null;
+        barm_base_3_texture = null;
+        farm_base_1_texture = null;
+        farm_base_3_texture = null;
+        bleg_base_1_texture = null;
+        bleg_base_3_texture = null;
+        bleg_cost_1_texture = null;
+        bleg_cost_3_texture = null;
+        fleg_base_1_texture = null;
+        fleg_base_3_texture = null;
+        fleg_cost_1_texture = null;
+        fleg_cost_3_texture = null;
+        
+        _head_hair_front_1_texture = null;
+        _head_hair_front_3_texture = null;
+        _head_hair_back_1_texture = null;
+        _head_hair_back_3_texture = null;
+        _head_base_1_texture = null;
+        _head_base_3_texture = null;
+        _head_eye_texture = null;
+        _head_face_3_texture = null;
+        _head_face_1_texture = null;
+        _head_mous_texture = null;
+        _head_hats_1_texture = null;
+        _head_hats_3_texture = null;
+        _body_base_1_texture = null;
+        _body_base_3_texture = null;
+        _body_cost_1_texture = null;
+        _body_cost_3_texture = null;
+        _body_cost_dres_1_texture = null;
+        _body_cost_dres_3_texture = null;
+        _body_wing_1_texture = null;
+        _body_wing_3_texture = null;
+        _barm_base_1_texture = null;
+        _barm_base_3_texture = null;
+        _farm_base_1_texture = null;
+        _farm_base_3_texture = null;
+        _bleg_base_1_texture = null;
+        _bleg_base_3_texture = null;
+        _bleg_cost_1_texture = null;
+        _bleg_cost_3_texture = null;
+        _fleg_base_1_texture = null;
+        _fleg_base_3_texture = null;
+        _fleg_cost_1_texture = null;
+        _fleg_cost_3_texture = null;
+    }
+
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
     {
         var baseRegion = (AtlasRegion)attachment?.Region;

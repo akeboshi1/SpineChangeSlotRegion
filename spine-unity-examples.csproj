@@ -87,8 +87,8 @@
      <Compile Include="Assets/Spine Examples/Scripts/SpawnFromSkeletonDataExample.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/Sample Components/SkeletonUtility Modules/SkeletonUtilityEyeConstraint.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/Sample Components/SkeletonAnimationMulti/SkeletonAnimationMulti.cs" />
-     <Compile Include="Assets/Spine Examples/Scripts/SpineboyBodyTilt.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/Sample Components/SetRigidbodySolverIterations.cs" />
+     <Compile Include="Assets/Spine Examples/Scripts/SpineboyBodyTilt.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/SpineboyPole.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/Mix and Match Character Customize/EquipButtonExample.cs" />
      <Compile Include="Assets/Spine Examples/Scripts/HeroEffectsHandlerExample.cs" />

@@ -11,29 +11,45 @@ public class Main : MonoBehaviour
 
     public GameObject ScrolView;
 
+    public Button resetBtn;
+
     private string folderPath = "Assets/Resources/"; // 存储文件夹路径
 
     public Texture2D[] textures; // 存储所有纹理
 
+    Dictionary<string, List<Texture2D>> dict = new Dictionary<string, List<Texture2D>>();
+
     private int scrollHei;
+
+    private int btnIndex = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         // 加载获取到存储路径下的贴图资源
         LoadAllTextures();
+        if (resetBtn) resetBtn.onClick.AddListener(() => resetClick());
+    }
+
+    void resetClick()
+    {
+        if (spineGO)
+        {
+            var spineController = spineGO.GetComponent<SpineController>();
+            spineController.clearAllCustomTex();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (spineGO)
-        {
-        }
-
-        if (dragonBoneGO)
-        {
-        }
+        // if (spineGO)
+        // {
+        // }
+        //
+        // if (dragonBoneGO)
+        // {
+        // }
     }
 
     void LoadAllTextures()
@@ -59,6 +75,7 @@ public class Main : MonoBehaviour
             tex.LoadImage(fileData);
             // 设定可读写
             tex.Apply(true);
+            tex.name = nameList[2];
             // 将纹理存储到textures数组中
             textures[index] = tex;
 
@@ -84,16 +101,26 @@ public class Main : MonoBehaviour
 
     void CreateButtons(string fileName, int i)
     {
-        // 创建Button GameObject
-        GameObject buttonGameObject = new GameObject($"Button {i + 1}");
-        buttonGameObject.transform.SetParent(ScrolView.transform, false);
+        var nameList = fileName.Split("_");
+        var checkSn = nameList[2].Length > 1 ? nameList[2] : nameList[3];
+        var tex = textures[i];
+        if (dict.ContainsKey(checkSn))
+        {
+            dict[checkSn].Add(tex);
+            return;
+        }
 
+        var sn = checkName(fileName, tex);
+        // 创建Button GameObject
+        GameObject buttonGameObject = new GameObject($"Button {btnIndex + 1}");
+        buttonGameObject.transform.SetParent(ScrolView.transform, false);
         // 添加Button组件
         Button buttonComponent = buttonGameObject.AddComponent<Button>();
 
+
         // 添加Button文本
         Text buttonText = buttonGameObject.AddComponent<Text>();
-        buttonText.text = fileName;
+        buttonText.text = sn;
         buttonText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         buttonText.fontSize = 24;
         buttonText.alignment = TextAnchor.MiddleLeft;
@@ -104,43 +131,57 @@ public class Main : MonoBehaviour
         buttonRectTransform.anchorMin = new Vector2(0, 1);
         buttonRectTransform.anchorMax = new Vector2(0, 1);
         buttonRectTransform.pivot = new Vector2(0, 1);
-        buttonRectTransform.anchoredPosition = new Vector2(0, -i * 50);
+        buttonRectTransform.anchoredPosition = new Vector2(0, -btnIndex * 50);
 
-        var tex = textures[i];
-        buttonComponent.onClick.AddListener(() => btnClick(fileName, tex));
+
+        buttonComponent.onClick.AddListener(() => btnClick(sn));
 
         scrollHei += 50;
+        btnIndex++;
     }
 
-    void btnClick(string name, Texture2D tex)
+    void btnClick(string sn)
     {
-        if (spineGO == null)
+        var list = dict[sn];
+        var len = list.Count;
+        for (var i = 0; i < len; i++)
         {
-            return;
-        }
+            var tex = list[i];
+            var name = tex.name;
+            var newName = "";
+            var nameList = name.Split("_");
+            if (nameList[1] == "hair")
+            {
+                newName = nameList[0] + "_" + nameList[1] + "_front_" + nameList[3] + "_texture";
+            }
+            else
+            {
+                newName = nameList[0] + "_" + nameList[1] + "_" + nameList[3] + "_texture";
+            }
 
+            var spineController = spineGO.GetComponent<SpineController>();
+            spineController.changeTexture(newName, tex);
+        }
+    }
+
+    string checkName(string name, Texture2D tex)
+    {
         var nameList = name.Split("_");
         var newName = "";
-        if (nameList[1] == "base")
+
+        var sn = nameList[2].Length > 1 ? nameList[2] : nameList[3];
+
+        var has = dict.ContainsKey(sn);
+        List<Texture2D> list;
+        if (has == false)
         {
-            return;
-        }
-        if (nameList[1] == "hair")
-        {
-            newName = nameList[0] + "_" + nameList[1] + "_front_" + nameList[3] + "_texture";
-        }
-        // else if (nameList[1] == "cost" && nameList.Length > 5)
-        // {
-        //     newName = nameList[0] + "_" + nameList[1] + "_" + nameList[3] + "_" + nameList[4] + "_texture";
-        // }
-        else
-        {
-            newName = nameList[0] + "_" + nameList[1] + "_" + nameList[3] + "_texture";
+            dict[sn] = new List<Texture2D>();
         }
 
-        var spineController = spineGO.GetComponent<SpineController>();
-        spineController.changeTexture(newName,tex);
-        // dynamic 
-        // spineController[newName] = tex;
+        list = dict[sn];
+        list.Add(tex);
+
+
+        return sn.ToString();
     }
 }
