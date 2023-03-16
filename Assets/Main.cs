@@ -73,6 +73,10 @@ public class Main : MonoBehaviour
             byte[] fileData = File.ReadAllBytes(fileNames[i]);
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(fileData);
+            // 设置sRGB
+
+            // 设置Alpha is Transparency
+            tex.alphaIsTransparency = false;
             // 设定可读写
             tex.Apply(true);
             tex.name = nameList[2];
