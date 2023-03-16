@@ -4,6 +4,7 @@ using Spine;
 using Spine.Unity;
 using Spine.Unity.AttachmentTools;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using Object = System.Object;
 using Random = UnityEngine.Random;
@@ -44,12 +45,20 @@ public class SpineController : MonoBehaviour
     // 正面右手
     public Texture2D barm_base_3_texture;
 
+    public Texture2D barm_cost_1_texture;
+
+    public Texture2D barm_cost_3_texture;
+
     // farm
     // 背面左手
     public Texture2D farm_base_1_texture;
 
     // 正面左手
     public Texture2D farm_base_3_texture;
+
+    public Texture2D farm_cost_1_texture;
+
+    public Texture2D farm_cost_3_texture;
 
     // bleg
     // 背面右腿
@@ -96,17 +105,25 @@ public class SpineController : MonoBehaviour
 
     // barm
     // 背面右手
-    public Texture2D _barm_base_1_texture;
+    private Texture2D _barm_base_1_texture;
 
     // 正面右手
-    public Texture2D _barm_base_3_texture;
+    private Texture2D _barm_base_3_texture;
+
+    private Texture2D _barm_cost_1_texture;
+
+    private Texture2D _barm_cost_3_texture;
 
     // farm
     // 背面左手
-    public Texture2D _farm_base_1_texture;
+    private Texture2D _farm_base_1_texture;
 
     // 正面左手
-    public Texture2D _farm_base_3_texture;
+    private Texture2D _farm_base_3_texture;
+
+    private Texture2D _farm_cost_1_texture;
+
+    private Texture2D _farm_cost_3_texture;
 
     // bleg
     // 背面右腿
@@ -144,10 +161,15 @@ public class SpineController : MonoBehaviour
     private bool updateRegion = false;
 
     private List<string> slotList;
+    
+    private SkeletonDataAsset originalSkeletonDataAsset;
 
     void Start()
     {
         skeletonAnimation = GetComponent<SkeletonAnimation>();
+        
+        originalSkeletonDataAsset = skeletonAnimation.SkeletonDataAsset;
+
 
         _meshRenderer = GetComponent<MeshRenderer>();
 
@@ -418,6 +440,20 @@ public class SpineController : MonoBehaviour
             _farm_base_1_texture = farm_base_1_texture;
         }
 
+        // if (farm_cost_3_texture != _farm_cost_3_texture)
+        // {
+        //     var slotName = slotList[18];
+        //     CreateRegionAttachmentByTexture(slotName, farm_cost_3_texture);
+        //     _farm_cost_3_texture = farm_cost_3_texture;
+        // }
+        //
+        // if (farm_cost_1_texture != _farm_cost_1_texture)
+        // {
+        //     var slotName = slotList[31];
+        //     CreateRegionAttachmentByTexture(slotName, farm_cost_1_texture);
+        //     _farm_cost_1_texture = farm_cost_1_texture;
+        // }
+
         // 正面右手
         if (barm_base_3_texture != _barm_base_3_texture)
         {
@@ -433,6 +469,20 @@ public class SpineController : MonoBehaviour
             CreateRegionAttachmentByTexture(slotName, barm_base_1_texture);
             _barm_base_1_texture = barm_base_1_texture;
         }
+
+        // if (barm_cost_3_texture != _barm_cost_3_texture)
+        // {
+        //     var slotName = slotList[18];
+        //     CreateRegionAttachmentByTexture(slotName, barm_cost_3_texture);
+        //     _barm_cost_3_texture = farm_cost_3_texture;
+        // }
+        //
+        // if (barm_cost_1_texture != _barm_cost_1_texture)
+        // {
+        //     var slotName = slotList[31];
+        //     CreateRegionAttachmentByTexture(slotName, barm_cost_1_texture);
+        //     _barm_cost_1_texture = barm_cost_1_texture;
+        // }
 
         // === 脚
         // 正面右脚
@@ -593,6 +643,20 @@ public class SpineController : MonoBehaviour
                 farm_base_3_texture = tex;
                 break;
 
+            case "barm_cost_1_texture":
+                barm_cost_1_texture = tex;
+                break;
+            case "barm_cost_3_texture":
+                barm_cost_3_texture = tex;
+                break;
+
+            case "farm_cost_1_texture":
+                farm_cost_1_texture = tex;
+                break;
+            case "farm_cost_3_texture":
+                farm_cost_3_texture = tex;
+                break;
+
             case "bleg_base_1_texture":
                 bleg_base_1_texture = tex;
                 break;
@@ -672,6 +736,7 @@ public class SpineController : MonoBehaviour
                 //
                 // Set the attachment on the slot
                 slot.Attachment = regionAttachment;
+                slot.SetColor(Color.white);
             }
         }
         else if (attachment is MeshAttachment)
@@ -688,6 +753,7 @@ public class SpineController : MonoBehaviour
                 //
                 // Set the attachment on the slot
                 slot.Attachment = regionAttachment;
+                slot.SetColor(Color.white);
             }
         }
         else
@@ -735,7 +801,7 @@ public class SpineController : MonoBehaviour
         fleg_base_3_texture = null;
         fleg_cost_1_texture = null;
         fleg_cost_3_texture = null;
-        
+
         _head_hair_front_1_texture = null;
         _head_hair_front_3_texture = null;
         _head_hair_back_1_texture = null;
@@ -768,6 +834,48 @@ public class SpineController : MonoBehaviour
         _fleg_base_3_texture = null;
         _fleg_cost_1_texture = null;
         _fleg_cost_3_texture = null;
+        
+        skeletonAnimation.skeletonDataAsset = originalSkeletonDataAsset;
+        skeletonAnimation.Initialize(true);
+    }
+
+    public void checkSlotVisible()
+    {
+        string[] slots =
+        {
+            "head_hair_back_0005_3",
+            "body_wing_0001_3",
+            "Weapons",
+            "fleg_cost_0005_3",
+            "bleg_cost_0005_3",
+            "body_cost_dres_0005_3",
+            "body_cost_0005_3",
+            "head_hats_0001_3",
+            "Basket",
+            "head_face_0001_3",
+            "head_face_0001_1",
+            "head_hair_0005_1",
+            "head_hats_0001_1",
+            "bleg_cost_0005_1",
+            "body_cost_0005_1",
+            "fleg_cost_0005_1",
+            "body_cost_dres_0005_1",
+            "head_hair_back_0005_1",
+            "body_wing_0001_1",
+            "JumpEffect",
+            "Dust1",
+            "Dust2",
+            "Dust3",
+            "Rocks"
+        };
+
+        var len = slots.Length;
+        for (var i = 0; i < len; i++)
+        {
+            var slotName = slots[i];
+            var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+            slot.SetColor(new Color(0, 0, 0, 0));
+        }
     }
 
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
@@ -897,12 +1005,12 @@ public class SpineController : MonoBehaviour
         // 定义槽位图片的偏移
         region.offsetX = 0;
         region.offsetY = 0;
-        var uvBottomLeft = new Vector2(rect.xMin / width, rect.yMin / height);
-        var uvBottomRight = new Vector2(rect.xMax / width, rect.yMin / height);
-        var uvTopLeft = new Vector2(rect.xMin / width, rect.yMax / height);
-        var uvTopRight = new Vector2(rect.xMax / width, rect.yMax / height);
+        // var uvBottomLeft = new Vector2(rect.xMin / width, rect.yMin / height);
+        // var uvBottomRight = new Vector2(rect.xMax / width, rect.yMin / height);
+        // var uvTopLeft = new Vector2(rect.xMin / width, rect.yMax / height);
+        // var uvTopRight = new Vector2(rect.xMax / width, rect.yMax / height);
 
         // 输出UV坐标
-        Debug.Log("UV: " + uvBottomLeft + ", " + uvBottomRight + ", " + uvTopLeft + ", " + uvTopRight);
+        // Debug.Log("UV: " + uvBottomLeft + ", " + uvBottomRight + ", " + uvTopLeft + ", " + uvTopRight);
     }
 }

@@ -7,6 +7,119 @@ public class DragonBonesController : MonoBehaviour
 {
     private string preActionName = "idle";
     public string curActionName = "";
+    
+     // head
+    public Texture2D head_hair_front_1_texture;
+    public Texture2D head_hair_front_3_texture;
+    public Texture2D head_hair_back_1_texture;
+    public Texture2D head_hair_back_3_texture;
+    public Texture2D head_base_1_texture;
+    public Texture2D head_base_3_texture;
+    public Texture2D head_eye_texture;
+    public Texture2D head_face_3_texture;
+    public Texture2D head_face_1_texture;
+    public Texture2D head_mous_texture;
+    public Texture2D head_hats_1_texture;
+    public Texture2D head_hats_3_texture;
+
+    // body
+    public Texture2D body_base_1_texture;
+    public Texture2D body_base_3_texture;
+    public Texture2D body_cost_1_texture;
+    public Texture2D body_cost_3_texture;
+    public Texture2D body_cost_dres_1_texture;
+    public Texture2D body_cost_dres_3_texture;
+    public Texture2D body_wing_1_texture;
+    public Texture2D body_wing_3_texture;
+
+    // barm
+    // 背面右手
+    public Texture2D barm_base_1_texture;
+
+    // 正面右手
+    public Texture2D barm_base_3_texture;
+
+    // farm
+    // 背面左手
+    public Texture2D farm_base_1_texture;
+
+    // 正面左手
+    public Texture2D farm_base_3_texture;
+
+    // bleg
+    // 背面右腿
+    public Texture2D bleg_base_1_texture;
+
+    // 正面右腿
+    public Texture2D bleg_base_3_texture;
+
+    public Texture2D bleg_cost_1_texture;
+    public Texture2D bleg_cost_3_texture;
+
+    // fleg
+    // 背面左腿
+    public Texture2D fleg_base_1_texture;
+
+    // 正面左腿
+    public Texture2D fleg_base_3_texture;
+    public Texture2D fleg_cost_1_texture;
+    public Texture2D fleg_cost_3_texture;
+
+    //======上一次替换的贴图，用于替换逻辑======
+    private Texture2D _head_hair_front_1_texture;
+    private Texture2D _head_hair_front_3_texture;
+    private Texture2D _head_hair_back_1_texture;
+    private Texture2D _head_hair_back_3_texture;
+    private Texture2D _head_base_1_texture;
+    private Texture2D _head_base_3_texture;
+    private Texture2D _head_eye_texture;
+    private Texture2D _head_face_1_texture;
+    private Texture2D _head_face_3_texture;
+    private Texture2D _head_mous_texture;
+    private Texture2D _head_hats_1_texture;
+    private Texture2D _head_hats_3_texture;
+
+    // body
+    private Texture2D _body_base_1_texture;
+    private Texture2D _body_base_3_texture;
+    private Texture2D _body_cost_1_texture;
+    private Texture2D _body_cost_3_texture;
+    private Texture2D _body_cost_dres_1_texture;
+    private Texture2D _body_cost_dres_3_texture;
+    private Texture2D _body_wing_1_texture;
+    private Texture2D _body_wing_3_texture;
+
+    // barm
+    // 背面右手
+    public Texture2D _barm_base_1_texture;
+
+    // 正面右手
+    public Texture2D _barm_base_3_texture;
+
+    // farm
+    // 背面左手
+    public Texture2D _farm_base_1_texture;
+
+    // 正面左手
+    public Texture2D _farm_base_3_texture;
+
+    // bleg
+    // 背面右腿
+    private Texture2D _bleg_base_1_texture;
+
+    // 正面右腿
+    private Texture2D _bleg_base_3_texture;
+    private Texture2D _bleg_cost_1_texture;
+    private Texture2D _bleg_cost_3_texture;
+
+    // fleg
+    // 背面左腿
+    private Texture2D _fleg_base_1_texture;
+
+    // 正面左腿
+    private Texture2D _fleg_base_3_texture;
+    private Texture2D _fleg_cost_1_texture;
+    private Texture2D _fleg_cost_3_texture;
 
     private UnityArmatureComponent armatureComponent;
 
@@ -30,7 +143,7 @@ public class DragonBonesController : MonoBehaviour
                 slot.displayIndex = -1;
             }
 
-            Debug.Log("Slot name: " + slot.name);
+            // Debug.Log("Slot name: " + slot.name);
         }
 
 

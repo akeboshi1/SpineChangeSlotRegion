@@ -146,6 +146,8 @@ public class Main : MonoBehaviour
 
     void btnClick(string sn)
     {
+        var spineController = spineGO.GetComponent<SpineController>();
+        spineController.checkSlotVisible();
         var list = dict[sn];
         var len = list.Count;
         for (var i = 0; i < len; i++)
@@ -163,7 +165,7 @@ public class Main : MonoBehaviour
                 newName = nameList[0] + "_" + nameList[1] + "_" + nameList[3] + "_texture";
             }
 
-            var spineController = spineGO.GetComponent<SpineController>();
+
             spineController.changeTexture(newName, tex);
         }
     }
