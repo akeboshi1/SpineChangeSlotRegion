@@ -172,7 +172,7 @@ public class SpineController : MonoBehaviour
 
 
         _meshRenderer = GetComponent<MeshRenderer>();
-
+        
         // Get the Spine skin
         skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
 
@@ -717,7 +717,7 @@ public class SpineController : MonoBehaviour
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
-
+        
         // Get the current attachment
         var attachment = slot.Attachment;
 
@@ -1013,4 +1013,19 @@ public class SpineController : MonoBehaviour
         // 输出UV坐标
         // Debug.Log("UV: " + uvBottomLeft + ", " + uvBottomRight + ", " + uvTopLeft + ", " + uvTopRight);
     }
+
+    // private void addEffect(string slotName)
+    // {
+    //     // 获取Spine骨骼插槽和附件
+    //     var attachmentSlot = spineAnimation.Skeleton.FindSlot(slotName);
+    //     attachment = attachmentSlot.Attachment;
+    //
+    //     // 从特效池中获取特效实例，并设置其位置和旋转
+    //     var particleEffect = particleEffectPool.Spawn();
+    //     particleEffect.transform.position = attachmentSlot.Bone.WorldToLocal(spineAnimation.transform.position);
+    //     particleEffect.transform.rotation = spineAnimation.transform.rotation;
+    //
+    //     // 启动特效
+    //     particleEffect.Play();
+    // }
 }
