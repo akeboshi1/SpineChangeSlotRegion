@@ -56,7 +56,9 @@ public class Main : MonoBehaviour
     {
         string[] fileNames = Directory.GetFiles(folderPath); // 获取文件夹中的所有文件名
         textures = new Texture2D[fileNames.Length]; // 初始化textures数组
-
+        var spineController = spineGO?.GetComponent<SpineController>();
+        spineController.sequenceRenderer = spineGO?.AddComponent<SpriteRenderer>();
+        spineController.animation = spineGO?.AddComponent<Animation>();
         var index = 0;
         for (int i = 0; i < fileNames.Length; i++)
         {
@@ -73,10 +75,18 @@ public class Main : MonoBehaviour
             byte[] fileData = File.ReadAllBytes(fileNames[i]);
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(fileData);
-            
+
             // 设定可读写
             tex.Apply(true);
             tex.name = nameList[2];
+
+            var textureNames = tex.name.Split("_");
+            if (textureNames.Length < 3 && textureNames[0] == "eyes")
+            {
+                spineController?.eyesList.Add(tex);
+                continue;
+            }
+
             // 将纹理存储到textures数组中
             textures[index] = tex;
 

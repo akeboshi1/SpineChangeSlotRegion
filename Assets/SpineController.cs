@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Net.Mail;
 using Spine;
 using Spine.Unity;
 using Spine.Unity.AttachmentTools;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using Animation = UnityEngine.Animation;
+using Attachment = Spine.Attachment;
+using Color = UnityEngine.Color;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
@@ -161,18 +167,29 @@ public class SpineController : MonoBehaviour
     private bool updateRegion = false;
 
     private List<string> slotList;
-    
+
+    // 眼睛序列帧测试列表
+    public List<Texture2D> eyesList = new List<Texture2D>();
+
     private SkeletonDataAsset originalSkeletonDataAsset;
+
+    public SpriteRenderer sequenceRenderer;
+
+    public Animation animation;
+
+    private bool eyeBoo = false;
 
     void Start()
     {
+        // eyesList = new List<Texture2D>();
+
         skeletonAnimation = GetComponent<SkeletonAnimation>();
-        
+
         originalSkeletonDataAsset = skeletonAnimation.SkeletonDataAsset;
 
 
         _meshRenderer = GetComponent<MeshRenderer>();
-        
+
         // Get the Spine skin
         skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
 
@@ -256,6 +273,83 @@ public class SpineController : MonoBehaviour
             playSpine(curActionName);
             preActionName = curActionName;
         }
+
+        if (eyesList != null && eyesList.Count == 4 && eyeBoo == false)
+        {
+            ChangeEyesAnimations();
+        }
+    }
+
+    void ChangeEyesAnimations()
+    {
+        // 创建新的序列帧动画
+        // SpriteRenderer sequenceRenderer = AddComponent<SpriteRenderer>();
+        AnimationClip clip = new AnimationClip();
+        clip.frameRate = 30; // 设置帧率
+        EditorCurveBinding binding = new EditorCurveBinding();
+        binding.type = typeof(SpriteRenderer);
+        binding.path = "";
+        binding.propertyName = "m_Sprite";
+
+
+        var Count = eyesList.Count;
+        Sprite[] sequenceSprites = new Sprite[Count];
+
+        for (var i = 0; i < Count; i++)
+        {
+            var tex = eyesList[i];
+            Rect rect = new Rect(new Vector2(0, 0), new Vector2(tex.width, tex.height));
+            sequenceSprites[i] = Sprite.Create(tex, rect, Vector2.zero);
+        }
+
+        ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[eyesList.Count];
+        for (int i = 0; i < Count; i++)
+        {
+            keyFrames[i] = new ObjectReferenceKeyframe();
+            keyFrames[i].time = i * (1f / clip.frameRate);
+            keyFrames[i].value = eyesList[i];
+        }
+
+        AnimationUtility.SetObjectReferenceCurve(clip, binding, keyFrames);
+
+        // 将序列帧动画添加到序列帧对象上
+        animation.AddClip(clip, "Sequence");
+        animation.clip = clip;
+        animation.clip.legacy = true;
+
+        var slotName = slotList[12];
+
+        // Get the Spine slot
+        var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+
+        // Get the current attachment
+        var attachment = slot.Attachment;
+
+        AtlasRegion region;
+        if (attachment is RegionAttachment)
+        {
+            region = CreateRegion((RegionAttachment)attachment, eyesList[0]);
+            RegionAttachment regionAttachment = (RegionAttachment)attachment;
+            var baseRegion = (AtlasRegion)regionAttachment?.Region;
+            if (baseRegion != null)
+            {
+                regionAttachment.Region = region;
+                regionAttachment.UpdateRegion();
+                // Replace the attachment in the skin
+                skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+                //
+                // Set the attachment on the slot
+                slot.Attachment = regionAttachment;
+                slot.SetColor(Color.white);
+            }
+
+            sequenceRenderer.sprite = sequenceSprites[0];
+
+            // 播放序列帧动画
+            animation.Play("Sequence");
+        }
+
+        eyeBoo = true;
     }
 
     void checkSlots()
@@ -386,8 +480,10 @@ public class SpineController : MonoBehaviour
         if (body_base_1_texture != _body_base_1_texture)
         {
             var slotName = slotList[25];
-            CreateRegionAttachmentByTexture(slotName, body_base_1_texture);
-            _body_base_1_texture = body_base_1_texture;
+            if (CreateRegionAttachmentByTexture(slotName, body_base_1_texture) != null)
+            {
+                _body_base_1_texture = body_base_1_texture;
+            }
         }
 
         // 正面衣服
@@ -402,8 +498,10 @@ public class SpineController : MonoBehaviour
         if (body_cost_1_texture != _body_cost_1_texture)
         {
             var slotName = slotList[27];
-            CreateRegionAttachmentByTexture(slotName, body_cost_1_texture);
-            _body_cost_1_texture = body_cost_1_texture;
+            if (CreateRegionAttachmentByTexture(slotName, body_cost_1_texture) != null)
+            {
+                _body_cost_1_texture = body_cost_1_texture;
+            }
         }
 
         // 正面裙子
@@ -713,11 +811,11 @@ public class SpineController : MonoBehaviour
     /**
  * 替换槽位资源
  */
-    void CreateRegionAttachmentByTexture(string slotName, Texture2D texture)
+    Attachment CreateRegionAttachmentByTexture(string slotName, Texture2D texture)
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
-        
+
         // Get the current attachment
         var attachment = slot.Attachment;
 
@@ -756,15 +854,8 @@ public class SpineController : MonoBehaviour
                 slot.SetColor(Color.white);
             }
         }
-        else
-        {
-            region = null;
-        }
 
-        if (region == null)
-        {
-            return;
-        }
+        return attachment;
     }
 
     public void clearAllCustomTex()
@@ -834,7 +925,7 @@ public class SpineController : MonoBehaviour
         _fleg_base_3_texture = null;
         _fleg_cost_1_texture = null;
         _fleg_cost_3_texture = null;
-        
+
         skeletonAnimation.skeletonDataAsset = originalSkeletonDataAsset;
         skeletonAnimation.Initialize(true);
     }
