@@ -150,7 +150,7 @@ public class SpineController : MonoBehaviour
     private Texture2D _fleg_cost_3_texture;
 
 
-    private SkeletonAnimation skeletonAnimation;
+    public SkeletonAnimation skeletonAnimation;
 
     private List<string> list;
 
@@ -175,7 +175,7 @@ public class SpineController : MonoBehaviour
 
     public SpriteRenderer sequenceRenderer;
 
-    public Animation animation;
+    public Spine.AnimationState state;
 
     private bool eyeBoo = false;
 
@@ -276,46 +276,13 @@ public class SpineController : MonoBehaviour
 
         if (eyesList != null && eyesList.Count == 4 && eyeBoo == false)
         {
-            ChangeEyesAnimations();
+            // ChangeEyesAnimations();
         }
     }
 
     void ChangeEyesAnimations()
     {
-        // 创建新的序列帧动画
-        // SpriteRenderer sequenceRenderer = AddComponent<SpriteRenderer>();
-        AnimationClip clip = new AnimationClip();
-        clip.frameRate = 30; // 设置帧率
-        EditorCurveBinding binding = new EditorCurveBinding();
-        binding.type = typeof(SpriteRenderer);
-        binding.path = "";
-        binding.propertyName = "m_Sprite";
-
-
-        var Count = eyesList.Count;
-        Sprite[] sequenceSprites = new Sprite[Count];
-
-        for (var i = 0; i < Count; i++)
-        {
-            var tex = eyesList[i];
-            Rect rect = new Rect(new Vector2(0, 0), new Vector2(tex.width, tex.height));
-            sequenceSprites[i] = Sprite.Create(tex, rect, Vector2.zero);
-        }
-
-        ObjectReferenceKeyframe[] keyFrames = new ObjectReferenceKeyframe[eyesList.Count];
-        for (int i = 0; i < Count; i++)
-        {
-            keyFrames[i] = new ObjectReferenceKeyframe();
-            keyFrames[i].time = i * (1f / clip.frameRate);
-            keyFrames[i].value = eyesList[i];
-        }
-
-        AnimationUtility.SetObjectReferenceCurve(clip, binding, keyFrames);
-
-        // 将序列帧动画添加到序列帧对象上
-        animation.AddClip(clip, "Sequence");
-        animation.clip = clip;
-        animation.clip.legacy = true;
+       
 
         var slotName = slotList[12];
 
@@ -325,6 +292,20 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
+        
+        var Count = eyesList.Count;
+
+        var name = attachment.Name;
+        Attachment spriteAttachment = new RegionAttachment(name);
+        
+        Sprite[] sprites = new Sprite[Count]; // 创建一个Sprite数组
+
+        for (int i = 0; i < Count; i++)
+        {
+            // 创建Sprite
+            Sprite sprite = Sprite.Create(eyesList[i], new Rect(0, 0, eyesList[i].width, eyesList[i].height), new Vector2(0.5f, 0.5f));
+            sprites[i] = sprite;
+        }
         AtlasRegion region;
         if (attachment is RegionAttachment)
         {
@@ -343,10 +324,10 @@ public class SpineController : MonoBehaviour
                 slot.SetColor(Color.white);
             }
 
-            sequenceRenderer.sprite = sequenceSprites[0];
+            // sequenceRenderer.sprite = sequenceSprites[0];
 
             // 播放序列帧动画
-            animation.Play("Sequence");
+            GetComponent<Animation>().Play("eyefaint");
         }
 
         eyeBoo = true;
@@ -969,6 +950,13 @@ public class SpineController : MonoBehaviour
         }
     }
 
+    public void CreateAnimation(SkeletonData skeletonData)
+    {
+        AnimationStateData stateData = new AnimationStateData(skeletonData);
+        state = new Spine.AnimationState(stateData);
+        state.SetAnimation(0, "eyefaint", true);
+    }
+
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
     {
         var baseRegion = (AtlasRegion)attachment?.Region;
@@ -1000,10 +988,20 @@ public class SpineController : MonoBehaviour
 
         // 创建一个新材质
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
+        // newMaterial.SetInt("_BlendOp", (int)UnityEngine.Rendering.BlendOp.Add);
+        // newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        // newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        // newMaterial.SetInt("_SrcAlpha", (int)UnityEngine.Rendering.BlendMode.One);
+        // newMaterial.SetInt("_DstAlpha", (int)UnityEngine.Rendering.BlendMode.Zero);
+        // newMaterial.SetInt("_AlphaSrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        // newMaterial.SetInt("_AlphaDstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+        // newMaterial.SetInt("_AlphaBlend", 1);
 
         // 从纹理中加载材质
         newMaterial.mainTexture = texture;
-
+        // newMaterial.SetTexture("_MainTex", texture);
+        // newMaterial.SetTexture("_StraightAlphaTex", texture);
+        // newMaterial.SetPass(0);
         // 将材质应用于渲染对象
         region.page.rendererObject = newMaterial;
 
@@ -1056,6 +1054,10 @@ public class SpineController : MonoBehaviour
  */
     private void calculateRuntimeUV(AtlasRegion region, Texture2D texture)
     {
+        texture.alphaIsTransparency = true;
+        
+        texture.Apply(true);
+
         // 获取纹理的宽度和高度
         var width = texture.width;
         var height = texture.height;
@@ -1067,6 +1069,13 @@ public class SpineController : MonoBehaviour
         {
             for (var y = 0; y < height; y++)
             {
+                // 图片预乘
+                var tmppixel = texture.GetPixel(x, y);
+                tmppixel.r *= tmppixel.a;
+                tmppixel.g *= tmppixel.a;
+                tmppixel.b *= tmppixel.a;
+                tmppixel.a = Mathf.Clamp01(tmppixel.a);
+                texture.SetPixel(x, y, tmppixel);
                 var pixel = pixels[y * width + x];
                 if (pixel.a > 0)
                 {
@@ -1077,7 +1086,7 @@ public class SpineController : MonoBehaviour
                 }
             }
         }
-
+        texture.Apply(true);
         region.originalWidth = texture.width;
         region.originalHeight = texture.height;
         var curWid = rect.xMax - rect.xMin;

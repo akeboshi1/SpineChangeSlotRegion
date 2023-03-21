@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Spine;
 using UnityEngine;
 using UnityEngine.UI;
+using Animation = UnityEngine.Animation;
 
 public class Main : MonoBehaviour
 {
@@ -58,7 +60,13 @@ public class Main : MonoBehaviour
         textures = new Texture2D[fileNames.Length]; // 初始化textures数组
         var spineController = spineGO?.GetComponent<SpineController>();
         spineController.sequenceRenderer = spineGO?.AddComponent<SpriteRenderer>();
-        spineController.animation = spineGO?.AddComponent<Animation>();
+        //SkeletonData skeletonData = spineController.skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
+        
+        // 创建动画实例
+        // spineController.CreateAnimation(skeletonData);
+       
+        
+        
         var index = 0;
         for (int i = 0; i < fileNames.Length; i++)
         {
