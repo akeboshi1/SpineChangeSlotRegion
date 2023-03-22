@@ -150,6 +150,10 @@ public class SpineController : MonoBehaviour
     private Texture2D _fleg_cost_3_texture;
 
 
+    public Texture2D dust_texture;
+    private Texture2D _dust_texture;
+
+
     public SkeletonAnimation skeletonAnimation;
 
     private List<string> list;
@@ -186,6 +190,12 @@ public class SpineController : MonoBehaviour
         skeletonAnimation = GetComponent<SkeletonAnimation>();
 
         originalSkeletonDataAsset = skeletonAnimation.SkeletonDataAsset;
+
+
+        // SkeletonData skeletonData = originalSkeletonDataAsset.GetSkeletonData(true);
+
+        // 创建动画实例
+        // CreateAnimation(skeletonData);
 
 
         _meshRenderer = GetComponent<MeshRenderer>();
@@ -282,8 +292,6 @@ public class SpineController : MonoBehaviour
 
     void ChangeEyesAnimations()
     {
-       
-
         var slotName = slotList[12];
 
         // Get the Spine slot
@@ -292,25 +300,17 @@ public class SpineController : MonoBehaviour
         // Get the current attachment
         var attachment = slot.Attachment;
 
-        
+
         var Count = eyesList.Count;
 
         var name = attachment.Name;
         Attachment spriteAttachment = new RegionAttachment(name);
-        
-        Sprite[] sprites = new Sprite[Count]; // 创建一个Sprite数组
 
-        for (int i = 0; i < Count; i++)
-        {
-            // 创建Sprite
-            Sprite sprite = Sprite.Create(eyesList[i], new Rect(0, 0, eyesList[i].width, eyesList[i].height), new Vector2(0.5f, 0.5f));
-            sprites[i] = sprite;
-        }
         AtlasRegion region;
-        if (attachment is RegionAttachment)
+        if (attachment is MeshAttachment)
         {
-            region = CreateRegion((RegionAttachment)attachment, eyesList[0]);
-            RegionAttachment regionAttachment = (RegionAttachment)attachment;
+            region = CreateRegion((MeshAttachment)attachment, eyesList[0]);
+            MeshAttachment regionAttachment = (MeshAttachment)attachment;
             var baseRegion = (AtlasRegion)regionAttachment?.Region;
             if (baseRegion != null)
             {
@@ -323,11 +323,6 @@ public class SpineController : MonoBehaviour
                 slot.Attachment = regionAttachment;
                 slot.SetColor(Color.white);
             }
-
-            // sequenceRenderer.sprite = sequenceSprites[0];
-
-            // 播放序列帧动画
-            GetComponent<Animation>().Play("eyefaint");
         }
 
         eyeBoo = true;
@@ -627,6 +622,43 @@ public class SpineController : MonoBehaviour
             CreateRegionAttachmentByTexture(slotName, fleg_cost_1_texture);
             _fleg_cost_1_texture = fleg_cost_1_texture;
         }
+
+        // dust
+        if (dust_texture != _dust_texture)
+        {
+            var slotName = slotList[35];
+            // Get the Spine slot
+            var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+            if (slot.Attachment != null)
+            {
+                var list = new List<Skin.SkinEntry>();
+                skin.GetAttachments(slot.Data.Index, list);
+                var count = list.Count;
+                if (count > 0)
+                {
+                    for (var i = 0; i < count; i++)
+                    {
+                        var skinEntry = list[i];
+                        var skinEntryAttachment = skinEntry.Attachment;
+                        AtlasRegion region = CreateRegion((RegionAttachment)skinEntryAttachment, dust_texture);
+                        RegionAttachment regionAttachment = (RegionAttachment)skinEntryAttachment;
+                        var baseRegion = (AtlasRegion)regionAttachment?.Region;
+                        if (baseRegion != null)
+                        {
+                            regionAttachment.Region = region;
+                            // Replace the attachment in the skin
+                            skin.SetAttachment(slot.Data.Index, skinEntryAttachment.Name, regionAttachment);
+                            // Set the attachment on the slot
+                            // slot.Attachment = regionAttachment;
+                            // slot.SetColor(Color.white);
+                        }
+                    }
+                    
+                }
+            }
+
+            _dust_texture = dust_texture;
+        }
     }
 
     public void changeTexture(string name, Texture2D tex)
@@ -763,6 +795,9 @@ public class SpineController : MonoBehaviour
             case "fleg_cost_3_texture":
                 fleg_cost_3_texture = tex;
                 break;
+            case "dust_texture":
+                dust_texture = tex;
+                break;
         }
     }
 
@@ -809,7 +844,6 @@ public class SpineController : MonoBehaviour
             if (baseRegion != null)
             {
                 regionAttachment.Region = region;
-                regionAttachment.UpdateRegion();
                 // Replace the attachment in the skin
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
@@ -873,6 +907,7 @@ public class SpineController : MonoBehaviour
         fleg_base_3_texture = null;
         fleg_cost_1_texture = null;
         fleg_cost_3_texture = null;
+        dust_texture = null;
 
         _head_hair_front_1_texture = null;
         _head_hair_front_3_texture = null;
@@ -906,6 +941,7 @@ public class SpineController : MonoBehaviour
         _fleg_base_3_texture = null;
         _fleg_cost_1_texture = null;
         _fleg_cost_3_texture = null;
+        _dust_texture = null;
 
         skeletonAnimation.skeletonDataAsset = originalSkeletonDataAsset;
         skeletonAnimation.Initialize(true);
@@ -954,7 +990,7 @@ public class SpineController : MonoBehaviour
     {
         AnimationStateData stateData = new AnimationStateData(skeletonData);
         state = new Spine.AnimationState(stateData);
-        state.SetAnimation(0, "eyefaint", true);
+        // state.SetAnimation(0, "eyefaint", true);
     }
 
     private AtlasRegion CreateRegion(RegionAttachment attachment, Texture2D texture)
@@ -1021,7 +1057,7 @@ public class SpineController : MonoBehaviour
         AtlasRegion region = new AtlasRegion();
 
 
-        // 获取没个贴图自身实际的uv值
+        // 获取每个贴图自身实际的uv值
         calculateRuntimeUV(region, texture);
 
         region.name = baseRegion.name;
@@ -1054,9 +1090,9 @@ public class SpineController : MonoBehaviour
  */
     private void calculateRuntimeUV(AtlasRegion region, Texture2D texture)
     {
-        texture.alphaIsTransparency = true;
-        
-        texture.Apply(true);
+        // texture.alphaIsTransparency = true;
+        //
+        // texture.Apply(true);
 
         // 获取纹理的宽度和高度
         var width = texture.width;
@@ -1070,12 +1106,12 @@ public class SpineController : MonoBehaviour
             for (var y = 0; y < height; y++)
             {
                 // 图片预乘
-                var tmppixel = texture.GetPixel(x, y);
-                tmppixel.r *= tmppixel.a;
-                tmppixel.g *= tmppixel.a;
-                tmppixel.b *= tmppixel.a;
-                tmppixel.a = Mathf.Clamp01(tmppixel.a);
-                texture.SetPixel(x, y, tmppixel);
+                // var tmppixel = texture.GetPixel(x, y);
+                // tmppixel.r *= tmppixel.a;
+                // tmppixel.g *= tmppixel.a;
+                // tmppixel.b *= tmppixel.a;
+                // tmppixel.a = Mathf.Clamp01(tmppixel.a);
+                // texture.SetPixel(x, y, tmppixel);
                 var pixel = pixels[y * width + x];
                 if (pixel.a > 0)
                 {
@@ -1086,7 +1122,8 @@ public class SpineController : MonoBehaviour
                 }
             }
         }
-        texture.Apply(true);
+
+        //texture.Apply(true);
         region.originalWidth = texture.width;
         region.originalHeight = texture.height;
         var curWid = rect.xMax - rect.xMin;

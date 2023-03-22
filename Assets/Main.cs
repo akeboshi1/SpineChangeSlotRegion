@@ -59,14 +59,6 @@ public class Main : MonoBehaviour
         string[] fileNames = Directory.GetFiles(folderPath); // 获取文件夹中的所有文件名
         textures = new Texture2D[fileNames.Length]; // 初始化textures数组
         var spineController = spineGO?.GetComponent<SpineController>();
-        spineController.sequenceRenderer = spineGO?.AddComponent<SpriteRenderer>();
-        //SkeletonData skeletonData = spineController.skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
-        
-        // 创建动画实例
-        // spineController.CreateAnimation(skeletonData);
-       
-        
-        
         var index = 0;
         for (int i = 0; i < fileNames.Length; i++)
         {
@@ -174,6 +166,11 @@ public class Main : MonoBehaviour
             if (nameList[1] == "hair")
             {
                 newName = nameList[0] + "_" + nameList[1] + "_front_" + nameList[3] + "_texture";
+            }
+
+            if (nameList[1] == "dusttest")
+            {
+                newName = nameList[0]+"_texture";
             }
             else
             {
