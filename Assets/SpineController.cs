@@ -636,7 +636,7 @@ public class SpineController : MonoBehaviour
                 var count = list.Count;
                 if (count > 0)
                 {
-                    for (var i = 0; i < count; i++)
+                    for (var i = 0; i < count - 2; i++)
                     {
                         var skinEntry = list[i];
                         var skinEntryAttachment = skinEntry.Attachment;
@@ -649,11 +649,10 @@ public class SpineController : MonoBehaviour
                             // Replace the attachment in the skin
                             skin.SetAttachment(slot.Data.Index, skinEntryAttachment.Name, regionAttachment);
                             // Set the attachment on the slot
-                            // slot.Attachment = regionAttachment;
-                            // slot.SetColor(Color.white);
+                            slot.Attachment = regionAttachment;
+                            slot.SetColor(Color.white);
                         }
                     }
-                    
                 }
             }
 
@@ -831,7 +830,25 @@ public class SpineController : MonoBehaviour
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+        if (slotName == "barm_base_0001_3")
+        {
+            var headSlot = skeletonAnimation.skeleton.FindSlot("head_base_0001_3");
+            // 创建 Slot 并附着到骨骼上
+            var slotData = new SlotData(slotList.Count, "testslot", slot.Bone.Data);
+            slotData.AttachmentName = "testslot";
+            var copySlot = new Slot(slotData, slot.Bone);
+            copySlot.Attachment = headSlot.Attachment;
+            skin.SetAttachment(slotList.Count, "testslot", headSlot.Attachment);
+            _skeleton.Slots.Add(copySlot);
+            _skeleton.DrawOrder.Add(copySlot);
+            _skeleton.Data.Slots.Add(slotData);
+            // 立刻更新新建的slot
+            _skeleton.SetSlotsToSetupPose();
+        }
 
+        // 创建 Slot 并附着到骨骼上
+        // var slotData = new SlotData(slotName, skeletonRenderer.skeletonData.FindSkin("default"));
+        // createdSlot = skeletonRenderer.skeleton.AddSlot(slotData, boneName);
         // Get the current attachment
         var attachment = slot.Attachment;
 
@@ -1006,7 +1023,7 @@ public class SpineController : MonoBehaviour
         AtlasRegion region = new AtlasRegion();
 
 
-        // 获取没个贴图自身实际的uv值
+        // 获取每个贴图自身实际的uv值
         calculateRuntimeUV(region, texture);
 
         region.name = baseRegion.name;
