@@ -627,16 +627,16 @@ public class SpineController : MonoBehaviour
         if (dust_texture != _dust_texture)
         {
             var slotName = slotList[35];
-            // Get the Spine slot
+            // Get the Spine slot 这段逻辑是用力替换序列帧动画的
             var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
-            if (slot.Attachment != null)
+            if (slot != null)
             {
                 var list = new List<Skin.SkinEntry>();
                 skin.GetAttachments(slot.Data.Index, list);
                 var count = list.Count;
                 if (count > 0)
                 {
-                    for (var i = 0; i < count - 2; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         var skinEntry = list[i];
                         var skinEntryAttachment = skinEntry.Attachment;
@@ -646,16 +646,14 @@ public class SpineController : MonoBehaviour
                         if (baseRegion != null)
                         {
                             regionAttachment.Region = region;
+                            regionAttachment.UpdateRegion();
                             // Replace the attachment in the skin
                             skin.SetAttachment(slot.Data.Index, skinEntryAttachment.Name, regionAttachment);
-                            // Set the attachment on the slot
-                            slot.Attachment = regionAttachment;
-                            slot.SetColor(Color.white);
+                            
                         }
                     }
                 }
             }
-
             _dust_texture = dust_texture;
         }
     }
@@ -845,10 +843,7 @@ public class SpineController : MonoBehaviour
             // 立刻更新新建的slot
             _skeleton.SetSlotsToSetupPose();
         }
-
-        // 创建 Slot 并附着到骨骼上
-        // var slotData = new SlotData(slotName, skeletonRenderer.skeletonData.FindSkin("default"));
-        // createdSlot = skeletonRenderer.skeleton.AddSlot(slotData, boneName);
+        
         // Get the current attachment
         var attachment = slot.Attachment;
 
@@ -988,7 +983,7 @@ public class SpineController : MonoBehaviour
             "head_hair_back_0005_1",
             "body_wing_0001_1",
             "JumpEffect",
-            "Dust1",
+            // "Dust1",
             "Dust2",
             "Dust3",
             "Rocks"
@@ -1026,6 +1021,9 @@ public class SpineController : MonoBehaviour
         // 获取每个贴图自身实际的uv值
         calculateRuntimeUV(region, texture);
 
+        attachment.Width = texture.width/100.0f;
+        attachment.Height = texture.height/100.0f;
+        
         region.name = baseRegion.name;
         region.rotate = false;
         region.page = new AtlasPage();
