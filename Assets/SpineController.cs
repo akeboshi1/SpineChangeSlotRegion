@@ -848,10 +848,10 @@ public class SpineController : MonoBehaviour
             // 立刻更新新建的slot
             _skeleton.SetSlotsToSetupPose();
         }
-        else if (slotName == "head_base_0001_3") // 创建一个文本贴脑门上
+        else if (slotName == "head_eyes_0001_3") // 创建一个文本贴脑门上
         {
             var go = new GameObject("follow");
-            go.transform.SetParent(_skeletonRenderer.transform,false);
+            go.transform.SetParent(_skeletonRenderer.transform, false);
             BoneFollower follow = go.AddComponent<BoneFollower>();
             follow.boneName = slot.Bone.Data.Name;
             follow.SkeletonRenderer = _skeletonRenderer;
@@ -864,12 +864,9 @@ public class SpineController : MonoBehaviour
             _textMesh.SetText("文本测试123");
             _textMesh.alignment = TextAlignmentOptions.Left;
             _textMesh.rectTransform.sizeDelta = new Vector2(0.5f, 0.1f);
-            _textMesh.rectTransform.localRotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+            _textMesh.rectTransform.localRotation = new Quaternion(0.0f, 0.0f, -90.0f, 0.0f);
             o.transform.localScale = Vector3.one;
             // o.transform.position = Vector3.zero;
-           
-            
-            
         }
 
         // Get the current attachment
