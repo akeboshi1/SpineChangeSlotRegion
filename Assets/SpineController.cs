@@ -5,6 +5,7 @@ using System.Net.Mail;
 using Spine;
 using Spine.Unity;
 using Spine.Unity.AttachmentTools;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -164,6 +165,8 @@ public class SpineController : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
 
+    private SkeletonRenderer _skeletonRenderer;
+
     private Skeleton _skeleton;
 
     private bool initBoo = false;
@@ -200,6 +203,7 @@ public class SpineController : MonoBehaviour
 
         _meshRenderer = GetComponent<MeshRenderer>();
 
+        _skeletonRenderer = GetComponent<SkeletonRenderer>();
         // Get the Spine skin
         skin = skeletonAnimation.Skeleton.Data.FindSkin(skinName);
 
@@ -627,7 +631,7 @@ public class SpineController : MonoBehaviour
         if (dust_texture != _dust_texture)
         {
             var slotName = slotList[35];
-            // Get the Spine slot 这段逻辑是用力替换序列帧动画的
+            // Get the Spine slot 这段逻辑是用来替换序列帧动画的
             var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
             if (slot != null)
             {
@@ -649,11 +653,11 @@ public class SpineController : MonoBehaviour
                             regionAttachment.UpdateRegion();
                             // Replace the attachment in the skin
                             skin.SetAttachment(slot.Data.Index, skinEntryAttachment.Name, regionAttachment);
-                            
                         }
                     }
                 }
             }
+
             _dust_texture = dust_texture;
         }
     }
@@ -828,6 +832,7 @@ public class SpineController : MonoBehaviour
     {
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
+        // 新建一个slot并挂载到对应骨骼上
         if (slotName == "barm_base_0001_3")
         {
             var headSlot = skeletonAnimation.skeleton.FindSlot("head_base_0001_3");
@@ -843,7 +848,30 @@ public class SpineController : MonoBehaviour
             // 立刻更新新建的slot
             _skeleton.SetSlotsToSetupPose();
         }
-        
+        else if (slotName == "head_base_0001_3") // 创建一个文本贴脑门上
+        {
+            var go = new GameObject("follow");
+            go.transform.SetParent(_skeletonRenderer.transform,false);
+            BoneFollower follow = go.AddComponent<BoneFollower>();
+            follow.boneName = slot.Bone.Data.Name;
+            follow.SkeletonRenderer = _skeletonRenderer;
+            go.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+            var o = new GameObject("text");
+            o.transform.SetParent(follow.transform, false);
+            var _textMesh = o.GetOrAddComponent<TextMeshPro>();
+            _textMesh.color = Color.black;
+            _textMesh.fontSize = 1.0f;
+            _textMesh.SetText("文本测试123");
+            _textMesh.alignment = TextAlignmentOptions.Left;
+            _textMesh.rectTransform.sizeDelta = new Vector2(0.5f, 0.1f);
+            _textMesh.rectTransform.localRotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+            o.transform.localScale = Vector3.one;
+            // o.transform.position = Vector3.zero;
+           
+            
+            
+        }
+
         // Get the current attachment
         var attachment = slot.Attachment;
 
@@ -1021,9 +1049,9 @@ public class SpineController : MonoBehaviour
         // 获取每个贴图自身实际的uv值
         calculateRuntimeUV(region, texture);
 
-        attachment.Width = texture.width/100.0f;
-        attachment.Height = texture.height/100.0f;
-        
+        attachment.Width = texture.width / 100.0f;
+        attachment.Height = texture.height / 100.0f;
+
         region.name = baseRegion.name;
         region.rotate = false;
         region.page = new AtlasPage();
@@ -1039,6 +1067,7 @@ public class SpineController : MonoBehaviour
 
         // 创建一个新材质
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
+        newMaterial.SetColor("_EmissionColor", Color.white);
         // newMaterial.SetInt("_BlendOp", (int)UnityEngine.Rendering.BlendOp.Add);
         // newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
         // newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
