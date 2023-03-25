@@ -411,5 +411,3 @@
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/DragonBones-Editor.csproj.CopyComplete
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/DragonBones-Editor.dll
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/DragonBones-Editor.pdb
-/Users/gxm/workspace/Unity/TestSpine/Temp/Bin/Debug/DragonBones-Editor/System.Configuration.dll
-/Users/gxm/workspace/Unity/TestSpine/Temp/Bin/Debug/DragonBones-Editor/System.EnterpriseServices.dll

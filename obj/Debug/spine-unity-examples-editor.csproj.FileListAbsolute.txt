@@ -433,3 +433,4 @@
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/spine-unity-examples-editor.csproj.CopyComplete
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/spine-unity-examples-editor.dll
 /Users/gxm/workspace/Unity/TestSpine/obj/Debug/spine-unity-examples-editor.pdb
+/Users/gxm/workspace/Unity/TestSpine/Temp/Bin/Debug/spine-unity-examples-editor/System.EnterpriseServices.dll
