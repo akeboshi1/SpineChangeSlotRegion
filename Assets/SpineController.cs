@@ -885,8 +885,8 @@ public class SpineController : MonoBehaviour
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
                 // Set the attachment on the slot
-                // slot.Attachment = regionAttachment;
-                // slot.SetColor(Color.white);
+                slot.Attachment = regionAttachment;
+                slot.SetColor(Color.white);
             }
         }
         else if (attachment is MeshAttachment)
@@ -902,8 +902,8 @@ public class SpineController : MonoBehaviour
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
                 // Set the attachment on the slot
-                // slot.Attachment = regionAttachment;
-                // slot.SetColor(Color.white);
+                slot.Attachment = regionAttachment;
+                slot.SetColor(Color.white);
             }
         }
 
