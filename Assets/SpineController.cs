@@ -18,8 +18,8 @@ using Random = UnityEngine.Random;
 
 public class SpineController : MonoBehaviour
 {
-    private string preActionName = "Idle Forward";
-    public string curActionName = "Idle Forward";
+    private string preActionName = "idle";
+    public string curActionName = "idle";
 
     // head
     public Texture2D head_hair_front_1_texture;
@@ -217,29 +217,29 @@ public class SpineController : MonoBehaviour
         slotList = new List<string>();
         string[] slotsToAdd =
         {
-            "head_hair_back_0005_3",
-            "body_wing_0001_3",
-            "barm_base_0001_3",
+            "head_hair_back_3",
+            "body_wing_3",
+            "barm_base_3",
             "Weapons",
-            "bleg_base_0001_3",
-            "body_base_0001_3",
-            "fleg_cost_0005_3",
-            "fleg_base_0001_3",
-            "bleg_cost_0005_3",
-            "body_cost_dres_0005_3",
-            "body_cost_0005_3",
-            "head_base_0001_3",
-            "head_eyes_0001_3",
-            "head_hair_0005_3",
-            "head_hats_0001_3",
-            "head_mous_0004_3",
+            "bleg_base_3",
+            "body_base_3",
+            "fleg_cost_3",
+            "fleg_base_3",
+            "bleg_cost_3",
+            "body_cost_dres_3",
+            "body_cost_3",
+            "head_base_3",
+            "head_eyes_3",
+            "head_hair_3",
+            "head_hats_3",
+            "head_mous_3",
             "Basket",
-            "head_face_0001_3",
-            "farm_base_0001_3",
-            "head_face_0001_1",
-            "head_base_0001_1", "head_hair_0005_1", "barm_base_0001_1", "bleg_base_0001_1", "head_hats_0001_1",
-            "body_base_0001_1", "bleg_cost_0005_1", "body_cost_0005_1", "fleg_base_0001_1", "fleg_cost_0005_1",
-            "body_cost_dres_0005_1", "farm_base_0001_1", "head_hair_back_0005_1", "body_wing_0001_1",
+            "head_face_3",
+            "farm_base_3",
+            "head_face_1",
+            "head_base_1", "head_hair_1", "barm_base_1", "bleg_base_1", "head_hats_1",
+            "body_base_1", "bleg_cost_1", "body_cost_1", "fleg_base_1", "fleg_cost_1",
+            "body_cost_dres_1", "farm_base_1", "head_hair_back_1", "body_wing_1",
             "JumpEffect",
             "Dust1",
             "Dust2",
@@ -252,8 +252,8 @@ public class SpineController : MonoBehaviour
         list = new List<string>();
         string[] stringsToAdd =
         {
-            "Axe", "Dust", "Idle Backward", "Idle Forward", "Jump Backward", "Jump Forward", "Laydown", "Pickup",
-            "Run Backward", "Run Forward", "Sit", "Walk Backward", "Walk Forward"
+            "idle", "idle2", "idle2_back", "idle3", "idle3_back", "idle4", "idle4_back", "idlefood",
+            "idlefood_back", "idle_back", "injured", "injured_back", "jump","jump2","jump2_back"
         };
         list.AddRange(stringsToAdd);
         initBoo = true;
@@ -334,6 +334,8 @@ public class SpineController : MonoBehaviour
 
     void checkSlots()
     {
+        var maskSlot = skeletonAnimation.Skeleton.FindSlot("head_mask_3");
+        if (maskSlot != null) maskSlot.Attachment = null;
         // ===== head
         // 前层头发正面
         if (head_hair_front_3_texture != _head_hair_front_3_texture)
@@ -833,9 +835,9 @@ public class SpineController : MonoBehaviour
         // Get the Spine slot
         var slot = skeletonAnimation.Skeleton.FindSlot(slotName);
         // 新建一个slot并挂载到对应骨骼上
-        if (slotName == "barm_base_0001_3")
+        if (slotName == "barm_base_3")
         {
-            var headSlot = skeletonAnimation.skeleton.FindSlot("head_base_0001_3");
+            var headSlot = skeletonAnimation.skeleton.FindSlot("head_base_3");
             // 创建 Slot 并附着到骨骼上
             var slotData = new SlotData(slotList.Count, "testslot", slot.Bone.Data);
             slotData.AttachmentName = "testslot";
@@ -884,7 +886,6 @@ public class SpineController : MonoBehaviour
                 regionAttachment.UpdateRegion();
                 // Replace the attachment in the skin
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
-                //
                 // Set the attachment on the slot
                 // slot.Attachment = regionAttachment;
                 // slot.SetColor(Color.white);
@@ -905,6 +906,44 @@ public class SpineController : MonoBehaviour
                 // Set the attachment on the slot
                 // slot.Attachment = regionAttachment;
                 // slot.SetColor(Color.white);
+            }
+        }
+        else
+        {
+            attachment = skin.GetAttachment(slot.Data.Index,slotName);
+            slot.Attachment = attachment;
+            if (attachment is RegionAttachment)
+            {
+                region = CreateRegion((RegionAttachment)attachment, texture);
+                RegionAttachment regionAttachment = (RegionAttachment)attachment;
+                var baseRegion = (AtlasRegion)regionAttachment?.Region;
+                if (baseRegion != null)
+                {
+                    regionAttachment.Region = region;
+                    // Replace the attachment in the skin
+                    skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+                    //
+                    // Set the attachment on the slot
+                    // slot.Attachment = regionAttachment;
+                    // slot.SetColor(Color.white);
+                }
+            }
+            else if (attachment is MeshAttachment)
+            {
+                region = CreateRegion((MeshAttachment)attachment, texture);
+                MeshAttachment regionAttachment = (MeshAttachment)attachment;
+                var baseRegion = (AtlasRegion)regionAttachment?.Region;
+                if (baseRegion != null)
+                {
+                    regionAttachment.Region = region;
+                    regionAttachment.UpdateRegion();
+                    // Replace the attachment in the skin
+                    skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
+                    //
+                    // Set the attachment on the slot
+                    // slot.Attachment = regionAttachment;
+                    // slot.SetColor(Color.white);
+                }
             }
         }
 
@@ -989,27 +1028,27 @@ public class SpineController : MonoBehaviour
     {
         string[] slots =
         {
-            "head_hair_back_0005_3",
-            "body_wing_0001_3",
+            // "head_hair_back_3",
+            "body_wing_3",
             "Weapons",
-            "fleg_cost_0005_3",
-            "bleg_cost_0005_3",
-            "body_cost_dres_0005_3",
-            "body_cost_0005_3",
-            "head_hats_0001_3",
+            "fleg_cost_3",
+            "bleg_cost_3",
+            "body_cost_dres_3",
+            "body_cost_3",
+            "head_hats_3",
             "Basket",
-            "head_face_0001_3",
-            "head_face_0001_1",
-            "head_hair_0005_1",
-            "head_hats_0001_1",
-            "bleg_cost_0005_1",
-            "body_cost_0005_1",
-            "fleg_cost_0005_1",
-            "body_cost_dres_0005_1",
-            "head_hair_back_0005_1",
-            "body_wing_0001_1",
+            "head_face_3",
+            "head_face_1",
+            "head_hair_1",
+            "head_hats_1",
+            "bleg_cost_1",
+            "body_cost_1",
+            "fleg_cost_1",
+            "body_cost_dres_1",
+            // "head_hair_back_1",
+            "body_wing_1",
             "JumpEffect",
-            // "Dust1",
+            "Dust1",
             "Dust2",
             "Dust3",
             "Rocks"
@@ -1065,7 +1104,7 @@ public class SpineController : MonoBehaviour
 
         // 创建一个新材质
         Material newMaterial = new Material(Shader.Find("Spine/Skeleton"));
-        newMaterial.SetColor("_EmissionColor", Color.white);
+        // newMaterial.SetColor("_EmissionColor", Color.white);
         // newMaterial.SetInt("_BlendOp", (int)UnityEngine.Rendering.BlendOp.Add);
         // newMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
         // newMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
