@@ -261,7 +261,7 @@ public class SpineController : MonoBehaviour
         System.Random random = new System.Random();
         int randomNumber = random.Next(0, 13);
         var actionName = list[randomNumber];
-        actionName = "Idle Forward";
+        actionName = "showAllSlots";
         curActionName = actionName;
 
         Debug.Log("====>", skeletonAnimation);
@@ -324,8 +324,8 @@ public class SpineController : MonoBehaviour
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
                 // Set the attachment on the slot
-                slot.Attachment = regionAttachment;
-                slot.SetColor(Color.white);
+                // slot.Attachment = regionAttachment;
+                // slot.SetColor(Color.white);
             }
         }
 
@@ -881,12 +881,13 @@ public class SpineController : MonoBehaviour
             if (baseRegion != null)
             {
                 regionAttachment.Region = region;
+                regionAttachment.UpdateRegion();
                 // Replace the attachment in the skin
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
                 // Set the attachment on the slot
-                slot.Attachment = regionAttachment;
-                slot.SetColor(Color.white);
+                // slot.Attachment = regionAttachment;
+                // slot.SetColor(Color.white);
             }
         }
         else if (attachment is MeshAttachment)
@@ -902,8 +903,8 @@ public class SpineController : MonoBehaviour
                 skin.SetAttachment(slot.Data.Index, attachment.Name, regionAttachment);
                 //
                 // Set the attachment on the slot
-                slot.Attachment = regionAttachment;
-                slot.SetColor(Color.white);
+                // slot.Attachment = regionAttachment;
+                // slot.SetColor(Color.white);
             }
         }
 
